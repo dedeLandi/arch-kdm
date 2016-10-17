@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="ASCII"?>
+<kdm:Segment xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:code="http://www.eclipse.org/MoDisco/kdm/code" xmlns:kdm="http://www.eclipse.org/MoDisco/kdm/kdm" xmlns:structure="http://www.eclipse.org/MoDisco/kdm/structure" name="TargetArchitecture">
+  <model xsi:type="structure:StructureModel">
+    <structureElement xsi:type="structure:Layer" name="(default package)">
+      <implementation xsi:type="code:Package" href="file:C:/Users/Fernando/Downloads/maranhao/workspace/ProjetoMestradoFernandoChagas2/src/newKDM.xmi#//@model.0/@codeElement.0"/>
+    </structureElement>
+    <structureElement xsi:type="structure:Layer" name="Controller2">
+      <implementation xsi:type="code:Package" href="file:C:/Users/Fernando/Downloads/maranhao/workspace/ProjetoMestradoFernandoChagas2/src/newKDM.xmi#//@model.0/@codeElement.1/@codeElement.0/@codeElement.0"/>
+    </structureElement>
+    <structureElement xsi:type="structure:Layer" name="Controller" inAggregated="//@model.0/@structureElement.3/@aggregated.0 //@model.0/@structureElement.5/@aggregated.1">
+      <implementation xsi:type="code:Package" href="file:C:/Users/Fernando/Downloads/maranhao/workspace/ProjetoMestradoFernandoChagas2/src/newKDM.xmi#//@model.0/@codeElement.2/@codeElement.0/@codeElement.0"/>
+    </structureElement>
+    <structureElement xsi:type="structure:Layer" name="Model" inAggregated="//@model.0/@structureElement.5/@aggregated.0" outAggregated="//@model.0/@structureElement.3/@aggregated.0">
+      <aggregated from="//@model.0/@structureElement.3" to="//@model.0/@structureElement.2" density="4">
+        <relation xsi:type="code:HasType" href="file:C:/Users/Fernando/Downloads/maranhao/workspace/ProjetoMestradoFernandoChagas2/src/newKDM.xmi#//@model.0/@codeElement.2/@codeElement.0/@codeElement.1/@codeElement.2/@codeElement.8/@codeElement.0/@parameterUnit.1/@codeRelation.0"/>
+        <relation xsi:type="code:HasType" href="file:C:/Users/Fernando/Downloads/maranhao/workspace/ProjetoMestradoFernandoChagas2/src/newKDM.xmi#//@model.0/@codeElement.2/@codeElement.0/@codeElement.1/@codeElement.3/@codeElement.1/@codeElement.0/@parameterUnit.1/@codeRelation.0"/>
+        <relation xsi:type="code:HasType" href="file:C:/Users/Fernando/Downloads/maranhao/workspace/ProjetoMestradoFernandoChagas2/src/newKDM.xmi#//@model.0/@codeElement.2/@codeElement.0/@codeElement.1/@codeElement.2/@codeElement.1/@codeRelation.0"/>
+        <relation xsi:type="code:HasType" href="file:C:/Users/Fernando/Downloads/maranhao/workspace/ProjetoMestradoFernandoChagas2/src/newKDM.xmi#//@model.0/@codeElement.2/@codeElement.0/@codeElement.1/@codeElement.3/@codeElement.0/@codeRelation.0"/>
+      </aggregated>
+      <implementation xsi:type="code:Package" href="file:C:/Users/Fernando/Downloads/maranhao/workspace/ProjetoMestradoFernandoChagas2/src/newKDM.xmi#//@model.0/@codeElement.2/@codeElement.0/@codeElement.1"/>
+    </structureElement>
+    <structureElement xsi:type="structure:Layer" name="Principal">
+      <implementation xsi:type="code:Package" href="file:C:/Users/Fernando/Downloads/maranhao/workspace/ProjetoMestradoFernandoChagas2/src/newKDM.xmi#//@model.0/@codeElement.2/@codeElement.0/@codeElement.2/@codeElement.0"/>
+    </structureElement>
+    <structureElement xsi:type="structure:Layer" name="View" outAggregated="//@model.0/@structureElement.5/@aggregated.0 //@model.0/@structureElement.5/@aggregated.1">
+      <aggregated from="//@model.0/@structureElement.5" to="//@model.0/@structureElement.3" density="2">
+        <relation xsi:type="code:HasType" href="file:C:/Users/Fernando/Downloads/maranhao/workspace/ProjetoMestradoFernandoChagas2/src/newKDM.xmi#//@model.0/@codeElement.2/@codeElement.0/@codeElement.2/@codeElement.3/@codeElement.0/@codeElement.1/@codeElement.1/@codeElement.0/@codeRelation.1"/>
+        <relation xsi:type="code:HasType" href="file:C:/Users/Fernando/Downloads/maranhao/workspace/ProjetoMestradoFernandoChagas2/src/newKDM.xmi#//@model.0/@codeElement.2/@codeElement.0/@codeElement.2/@codeElement.3/@codeElement.0/@codeElement.1/@codeElement.3/@codeElement.0/@codeRelation.1"/>
+      </aggregated>
+      <aggregated from="//@model.0/@structureElement.5" to="//@model.0/@structureElement.2" density="3">
+        <relation xsi:type="code:HasType" href="file:C:/Users/Fernando/Downloads/maranhao/workspace/ProjetoMestradoFernandoChagas2/src/newKDM.xmi#//@model.0/@codeElement.2/@codeElement.0/@codeElement.2/@codeElement.1/@codeElement.0/@codeElement.1/@codeElement.0/@codeElement.0/@codeRelation.1"/>
+        <relation xsi:type="code:HasType" href="file:C:/Users/Fernando/Downloads/maranhao/workspace/ProjetoMestradoFernandoChagas2/src/newKDM.xmi#//@model.0/@codeElement.2/@codeElement.0/@codeElement.2/@codeElement.3/@codeElement.0/@codeElement.1/@codeElement.0/@codeElement.0/@codeRelation.1"/>
+      </aggregated>
+      <implementation xsi:type="code:Package" href="file:C:/Users/Fernando/Downloads/maranhao/workspace/ProjetoMestradoFernandoChagas2/src/newKDM.xmi#//@model.0/@codeElement.2/@codeElement.0/@codeElement.2"/>
+    </structureElement>
+  </model>
+</kdm:Segment>

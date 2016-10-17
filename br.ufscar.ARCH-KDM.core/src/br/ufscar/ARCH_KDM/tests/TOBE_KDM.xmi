@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ASCII"?>
+<kdm:Segment xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:action="http://www.eclipse.org/MoDisco/kdm/action" xmlns:code="http://www.eclipse.org/MoDisco/kdm/code" xmlns:kdm="http://www.eclipse.org/MoDisco/kdm/kdm" xmlns:structure="http://www.eclipse.org/MoDisco/kdm/structure" name="file:/C:/Users/Fernando/Downloads/maranhao/runtime-EclipseXtext/Teste/src/teste.dcl">
+  <model xsi:type="structure:StructureModel">
+    <structureElement xsi:type="structure:Layer" name="model" inAggregated="//@model.0/@structureElement.1/@aggregated.0"/>
+    <structureElement xsi:type="structure:Layer" name="controller" outAggregated="//@model.0/@structureElement.1/@aggregated.0">
+      <aggregated from="//@model.0/@structureElement.1" to="//@model.0/@structureElement.0" relation="//@model.1/@codeElement.0/@codeElement.1/@actionRelation.0 //@model.1/@codeElement.0/@codeElement.1/@actionRelation.1 //@model.1/@codeElement.0/@codeElement.1/@actionRelation.2 //@model.1/@codeElement.0/@codeElement.0/@codeRelation.0 //@model.1/@codeElement.0/@codeElement.0/@codeRelation.1 //@model.1/@codeElement.0/@codeElement.0/@codeRelation.2" density="6"/>
+    </structureElement>
+  </model>
+  <model xsi:type="code:CodeModel" name="Elements Instances">
+    <codeElement xsi:type="code:Module" name="Module Instance">
+      <codeElement xsi:type="code:CodeElement" name="codeElement Instance">
+        <codeRelation xsi:type="code:Extends"/>
+        <codeRelation xsi:type="code:Implements"/>
+        <codeRelation xsi:type="code:HasValue"/>
+      </codeElement>
+      <codeElement xsi:type="action:ActionElement" name="actionElement Instance">
+        <actionRelation xsi:type="action:Calls"/>
+        <actionRelation xsi:type="action:UsesType"/>
+        <actionRelation xsi:type="action:Creates"/>
+      </codeElement>
+    </codeElement>
+  </model>
+</kdm:Segment>
