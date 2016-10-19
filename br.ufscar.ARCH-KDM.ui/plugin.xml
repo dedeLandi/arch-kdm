@@ -70,12 +70,12 @@
    <extension
          point="org.eclipse.ui.views">
       <view
-            class="com.br.ufscar.dc.ui.DCLView"
+            class="br.ufscar.ARCH_KDM.views.DCLView"
             id="com.br.ufscar.dc.ui.DCLView"
             name="DCL View">
       </view>
       <view
-            class="com.br.ufscar.dc.ui.RelationShipView"
+            class="br.ufscar.ARCH_KDM.views.RelationShipView"
             id="com.br.ufscar.dc.ui.RelationShipView"
             name="RelationShip">
       </view>
