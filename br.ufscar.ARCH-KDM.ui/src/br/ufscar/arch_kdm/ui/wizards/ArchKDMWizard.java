@@ -5,17 +5,16 @@ import org.eclipse.gmt.modisco.omg.kdm.structure.StructureModel;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
 
+import br.ufscar.arch_kdm.core.util.GenericMethods;
 import br.ufscar.arch_kdm.ui.wizardsPage.Page01Introduction;
 import br.ufscar.arch_kdm.ui.wizardsPage.Page02SelectFileWithDrift;
 import br.ufscar.arch_kdm.ui.wizardsPage.Page03MapArchitecture;
 import br.ufscar.arch_kdm.ui.wizardsPage.Page04ArchitecturalCompilanceChecking;
 import br.ufscar.arch_kdm.ui.wizardsPage.Page05ViewDrifts;
 import br.ufscar.arch_kdm.ui.wizardsPage.Page05ViewDriftsFail;
-import br.ufscar.kdm_manager.core.exceptions.KDMFileException;
-import br.ufscar.kdm_manager.core.loads.factory.KDMFileReaderFactory;
 
 public class ArchKDMWizard extends Wizard {
-	
+
 	private Page01Introduction page1 = new Page01Introduction();
 	private Page02SelectFileWithDrift page2 = new Page02SelectFileWithDrift();
 	private Page03MapArchitecture page3 = new Page03MapArchitecture();
@@ -24,19 +23,21 @@ public class ArchKDMWizard extends Wizard {
 
 	private Page05ViewDriftsFail page5_1 = new Page05ViewDriftsFail();
 
-	
+
 	private Segment segmentPlannedArchitecture = null;
 	private Segment segmentActualArchitecture = null;
-	
+	private Segment segmentActualArchitectureCompleteMap = null;
+
 	private StructureModel structureDrifts = null;
 
 	private String pathPlannedArchitecture = null;
 	private String pathActualArchitecture = null;
-	
+	private String pathActualArchitectureCompleteMap = null;
+
 	private void cleanObjects() {
 		segmentPlannedArchitecture = null;
 		segmentActualArchitecture = null;
-		
+
 		setPathPlannedArchitecture(null);
 		setPathActualArchitecture(null);
 	}
@@ -60,13 +61,13 @@ public class ArchKDMWizard extends Wizard {
 
 	@Override
 	public boolean canFinish() {
-		 if(getContainer().getCurrentPage() == page5 || getContainer().getCurrentPage() == page5_1){
-			 return true;
-		 }else{
-			 return false;
-		 }
+		if(getContainer().getCurrentPage() == page5 || getContainer().getCurrentPage() == page5_1){
+			return true;
+		}else{
+			return false;
+		}
 	}
-	
+
 	@Override
 	public boolean performFinish() {
 		//usar o mensage dialog
@@ -102,6 +103,19 @@ public class ArchKDMWizard extends Wizard {
 	public Segment getSegmentActualArchitecture() {
 		return segmentActualArchitecture;
 	}
+	
+	/**
+	 * @return the segmentActualArchitectureCompleteMap
+	 */
+	public Segment getSegmentActualArchitectureCompleteMap() {
+		if(this.segmentActualArchitectureCompleteMap != null){
+			return this.segmentActualArchitectureCompleteMap;
+		}else if(this.segmentActualArchitecture != null){
+			return this.segmentActualArchitecture;
+		}else{
+			return null;
+		}
+	}
 
 	/**
 	 * @param setActualArchitecture the setActualArchitecture to set
@@ -118,6 +132,14 @@ public class ArchKDMWizard extends Wizard {
 		this.pathPlannedArchitecture = pathPlannedArchitecture;
 	}
 
+	public String getPathActualArchitectureCompleteMap() {
+		return pathActualArchitectureCompleteMap;
+	}
+	
+	public void setPathActualArchitectureCompleteMap(String pathActualArchitectureCompleteMap) {
+		this.pathActualArchitectureCompleteMap = pathActualArchitectureCompleteMap;
+	}
+
 	public String getPathActualArchitecture() {
 		return pathActualArchitecture;
 	}
@@ -127,12 +149,11 @@ public class ArchKDMWizard extends Wizard {
 	}
 
 	public void readSements() {
-		try {
-			this.segmentActualArchitecture = KDMFileReaderFactory.eINSTANCE.createKDMFileReaderToSegment().readFromPath(this.pathActualArchitecture);
-			this.segmentPlannedArchitecture = KDMFileReaderFactory.eINSTANCE.createKDMFileReaderToSegment().readFromPath(this.pathPlannedArchitecture);
-		} catch (KDMFileException e) {
-			e.printStackTrace();
-		}
+		this.segmentActualArchitecture = GenericMethods.readSegmentFromPath(this.pathActualArchitecture);
+		this.segmentPlannedArchitecture = GenericMethods.readSegmentFromPath(this.pathPlannedArchitecture);
+	}
+	public void readCompleteMap() {
+		this.segmentActualArchitectureCompleteMap = GenericMethods.readSegmentFromPath(this.pathActualArchitectureCompleteMap);
 	}
 
 	/**
@@ -141,8 +162,9 @@ public class ArchKDMWizard extends Wizard {
 	 */
 	public void setStructureDrifts(StructureModel structureDrifts) {
 		this.structureDrifts = structureDrifts;
+		this.segmentActualArchitecture.getModel().add(this.structureDrifts);
 	}
-	
+
 	/**
 	 * @return the structureDrifts
 	 */
