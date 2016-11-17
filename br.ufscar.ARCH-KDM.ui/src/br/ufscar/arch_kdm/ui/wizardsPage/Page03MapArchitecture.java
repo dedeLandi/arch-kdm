@@ -7,7 +7,6 @@ import org.eclipse.gmt.modisco.omg.kdm.code.CodeModel;
 import org.eclipse.gmt.modisco.omg.kdm.code.Package;
 import org.eclipse.gmt.modisco.omg.kdm.core.KDMEntity;
 import org.eclipse.gmt.modisco.omg.kdm.kdm.KDMModel;
-import org.eclipse.gmt.modisco.omg.kdm.kdm.Segment;
 import org.eclipse.gmt.modisco.omg.kdm.structure.AbstractStructureElement;
 import org.eclipse.gmt.modisco.omg.kdm.structure.StructureModel;
 import org.eclipse.jface.window.Window;
@@ -29,11 +28,10 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import br.ufscar.arch_kdm.core.mapping.MapArchitecture;
+import br.ufscar.arch_kdm.core.util.GenericMethods;
 import br.ufscar.arch_kdm.ui.dialogs.SelectionModelDialog;
 import br.ufscar.arch_kdm.ui.util.IconsType;
 import br.ufscar.arch_kdm.ui.wizards.ArchKDMWizard;
-import br.ufscar.kdm_manager.core.readers.modelReader.factory.KDMModelReaderJavaFactory;
-import br.ufscar.kdm_manager.core.serializes.factory.KDMFileSerializeFactory;
 
 public class Page03MapArchitecture extends WizardPage {
 
@@ -47,6 +45,7 @@ public class Page03MapArchitecture extends WizardPage {
 	private CodeModel actualArchitecture = null;
 	private Button bRemoveMap;
 	private Button bMap;
+	private boolean alreadyMap = false;
 
 	/**
 	 * Create the wizard.
@@ -219,20 +218,34 @@ public class Page03MapArchitecture extends WizardPage {
 	}
 
 	protected void save() {
+		String KDMPath = ((ArchKDMWizard)this.getWizard()).getPathActualArchitecture().replace(".xmi", "-mapped.xmi");
+		
+		
+		GenericMethods.serializeSegment(KDMPath, ((ArchKDMWizard)this.getWizard()).getSegmentActualArchitecture());
+		
+		((ArchKDMWizard)this.getWizard()).setPathActualArchitectureCompleteMap(KDMPath);
 
-		String KDMPath = "file:///" + ((ArchKDMWizard)this.getWizard()).getPathActualArchitecture().replace(".xmi", "-mapped.xmi");
-
-		KDMFileSerializeFactory.eINSTANCE.createKDMFileSerializeFromSegment().serializeFromObject(KDMPath, ((ArchKDMWizard)this.getWizard()).getSegmentActualArchitecture());
+		((ArchKDMWizard)this.getWizard()).readCompleteMap();
+		
+		this.setAlreadyMap(true);
+		
+		getWizard().getContainer().updateButtons();
+		
 	}
 
 	protected void removeMappedElement() {
-		this.completeMap = null;
+		cleanCompleteMap();
 		if(validateSelectionElementMapped()){
 			TreeItem[] selection = treeElementsMapped.getSelection();
 			for (TreeItem treeItem : selection) {
 				treeItem.dispose();
 			}
 		}
+	}
+
+	private void cleanCompleteMap() {
+		this.completeMap = null;
+		this.setAlreadyMap(false);
 	}
 
 	private boolean validateSelectionElementMapped() {
@@ -246,7 +259,7 @@ public class Page03MapArchitecture extends WizardPage {
 	}
 
 	protected void mapElements() {
-		this.completeMap = null;
+		cleanCompleteMap();
 		if(validateSelectionArchCode()){
 			String text = "";
 			Object data[] = new Object[2];
@@ -320,14 +333,12 @@ public class Page03MapArchitecture extends WizardPage {
 	 * @return
 	 */
 	private boolean validateCanFlip() {
-		// TODO Auto-generated method stub
-		return false;
+		return isAlreadyMap();
 	}
 
 	@Override
 	public IWizardPage getNextPage() {
-//		((Page03SelectDrift) getWizard().getPage("page03")).fillTDrifts();
-		return getWizard().getPage("page03");
+		return getWizard().getPage("page04");
 	}
 
 	/**
@@ -337,8 +348,7 @@ public class Page03MapArchitecture extends WizardPage {
 		String textInterface = "Select the planned architectural model:";
 		treeArchitecturalElements.removeAll();
 		enableButtons();
-		Segment segmentPlannedArchitecture = ((ArchKDMWizard)this.getWizard()).getSegmentPlannedArchitecture();
-		Map<String, java.util.List<StructureModel>> allStructure = KDMModelReaderJavaFactory.eINSTANCE.createKDMStructureModelReader().getAllFromSegment(segmentPlannedArchitecture);
+		Map<String, java.util.List<StructureModel>> allStructure = GenericMethods.getAllStructure(((ArchKDMWizard)this.getWizard()).getSegmentPlannedArchitecture());
 		plannedArchitecture = null;
 		if(allStructure.keySet().size() == 1){
 			for (String key : allStructure.keySet()) {
@@ -399,8 +409,7 @@ public class Page03MapArchitecture extends WizardPage {
 		String textInterface = "Select the actual architecture model:";
 		treeCodeElements.removeAll();
 		enableButtons();
-		Segment segmentPlannedArchitecture = ((ArchKDMWizard)this.getWizard()).getSegmentActualArchitecture();
-		Map<String, java.util.List<CodeModel>> allCode = KDMModelReaderJavaFactory.eINSTANCE.createKDMCodeModelReader().getAllFromSegment(segmentPlannedArchitecture);
+		Map<String, java.util.List<CodeModel>> allCode = GenericMethods.getAllCode(((ArchKDMWizard)this.getWizard()).getSegmentActualArchitecture());
 		actualArchitecture = null;
 		if(allCode.keySet().size() == 1){
 			for (String key : allCode.keySet()) {
@@ -441,5 +450,19 @@ public class Page03MapArchitecture extends WizardPage {
 			}
 
 		}	
+	}
+
+	/**
+	 * @return the alreadyMap
+	 */
+	public boolean isAlreadyMap() {
+		return alreadyMap;
+	}
+
+	/**
+	 * @param alreadyMap the alreadyMap to set
+	 */
+	public void setAlreadyMap(boolean alreadyMap) {
+		this.alreadyMap = alreadyMap;
 	}
 }
