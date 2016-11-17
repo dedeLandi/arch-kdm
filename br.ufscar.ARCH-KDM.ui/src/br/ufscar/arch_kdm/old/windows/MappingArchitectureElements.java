@@ -1,4 +1,4 @@
-package br.ufscar.arch_kdm.ui.windows;
+package br.ufscar.arch_kdm.old.windows;
 
 import java.util.ArrayList;
 
@@ -23,8 +23,8 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.wb.swt.SWTResourceManager;
 
-import br.ufscar.arch_kdm.core.model.MapItem;
-import br.ufscar.arch_kdm.core.util.ReadingKDMFile;
+import br.ufscar.arch_kdm.old.model.MapItem;
+import br.ufscar.arch_kdm.old.util.ReadingKDMFile;
 
 public class MappingArchitectureElements {
 

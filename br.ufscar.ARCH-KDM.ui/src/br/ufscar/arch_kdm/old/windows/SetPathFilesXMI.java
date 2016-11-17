@@ -1,4 +1,4 @@
-package br.ufscar.arch_kdm.ui.windows;
+package br.ufscar.arch_kdm.old.windows;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
@@ -13,7 +13,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import br.ufscar.arch_kdm.ui.actions.ArchitectureComplianceChecking;
+import br.ufscar.arch_kdm.old.actions.ArchitectureComplianceChecking;
 
 public class SetPathFilesXMI {
 

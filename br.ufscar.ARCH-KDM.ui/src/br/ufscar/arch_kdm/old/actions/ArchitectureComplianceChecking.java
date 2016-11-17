@@ -1,4 +1,4 @@
-package br.ufscar.arch_kdm.ui.actions;
+package br.ufscar.arch_kdm.old.actions;
 
 import java.util.Iterator;
 
@@ -14,8 +14,8 @@ import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
-import br.ufscar.arch_kdm.core.util.ReadingKDMFile;
-import br.ufscar.arch_kdm.ui.windows.SetPathFilesXMI;
+import br.ufscar.arch_kdm.old.util.ReadingKDMFile;
+import br.ufscar.arch_kdm.old.windows.SetPathFilesXMI;
 
 public class ArchitectureComplianceChecking implements IObjectActionDelegate {
 

@@ -17,7 +17,7 @@
            </separator>
         </menu>
         <action
-              class="br.ufscar.arch_kdm.ui.actions.ActionRecoveryArchitecture"
+              class="br.ufscar.arch_kdm.old.actions.ActionRecoveryArchitecture"
               enablesFor="1"
               icon="icons/recovery.png"
               id="br.ufscar.ARCH-KDM.ui.action2"
@@ -25,21 +25,21 @@
               menubarPath="br.ufscar.ARCH-KDM.ui.subMenu/group1">
         </action>
         <action
-              class="br.ufscar.arch_kdm.ui.actions.ArchitectureComplianceChecking"
+              class="br.ufscar.arch_kdm.old.actions.ArchitectureComplianceChecking"
               enablesFor="1"
               id="br.ufscar.ARCH-KDM.ui.action3"
               label="Architecture Compliance Checking"
               menubarPath="br.ufscar.ARCH-KDM.ui.subMenu/group1">
         </action>
         <action
-              class="br.ufscar.arch_kdm.ui.actions.GettingKDMInstance"
+              class="br.ufscar.arch_kdm.old.actions.GettingKDMInstance"
               enablesFor="1"
               id="br.ufscar.ARCH-KDM.ui.action4"
               label="Get KDM Instance"
               menubarPath="br.ufscar.ARCH-KDM.ui.subMenu/group1">
         </action>
         <action
-              class="br.ufscar.arch_kdm.ui.actions.MapArchitectureElementsToCodeElements"
+              class="br.ufscar.arch_kdm.old.actions.MapArchitectureElementsToCodeElements"
               enablesFor="1"
               id="br.ufscar.ARCH-KDM.ui.action5"
               label="Map Architectural Elements"
@@ -59,7 +59,7 @@
            </separator>
         </menu>
         <action
-              class="br.ufscar.arch_kdm.ui.actions.ReadinDSLVIew"
+              class="br.ufscar.arch_kdm.old.actions.ReadinDSLVIew"
               enablesFor="1"
               id="br.ufscar.ARCH-KDM.ui.action6"
               label="Create KDM Structure"
@@ -70,12 +70,12 @@
    <extension
          point="org.eclipse.ui.views">
       <view
-            class="br.ufscar.arch_kdm.ui.views.DCLView"
+            class="br.ufscar.arch_kdm.old.views.DCLView"
             id="com.br.ufscar.dc.ui.DCLView"
             name="DCL View">
       </view>
       <view
-            class="br.ufscar.arch_kdm.ui.views.RelationShipView"
+            class="br.ufscar.arch_kdm.old.views.RelationShipView"
             id="com.br.ufscar.dc.ui.RelationShipView"
             name="RelationShip">
       </view>

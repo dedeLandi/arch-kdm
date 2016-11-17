@@ -1,4 +1,4 @@
-package br.ufscar.arch_kdm.ui.views;
+package br.ufscar.arch_kdm.old.views;
 
 import java.util.ArrayList;
 
@@ -32,7 +32,7 @@ import org.eclipse.zest.layouts.algorithms.RadialLayoutAlgorithm;
 import org.eclipse.zest.layouts.algorithms.SpringLayoutAlgorithm;
 import org.eclipse.zest.layouts.algorithms.TreeLayoutAlgorithm;
 
-import br.ufscar.arch_kdm.ui.actions.ActionRecoveryArchitecture;
+import br.ufscar.arch_kdm.old.actions.ActionRecoveryArchitecture;
 
 public class DCLView extends ViewPart {
 

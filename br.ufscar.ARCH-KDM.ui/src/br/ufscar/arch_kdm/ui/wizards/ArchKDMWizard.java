@@ -1,6 +1,7 @@
 package br.ufscar.arch_kdm.ui.wizards;
 
 import org.eclipse.gmt.modisco.omg.kdm.kdm.Segment;
+import org.eclipse.gmt.modisco.omg.kdm.structure.StructureModel;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
 
@@ -27,6 +28,8 @@ public class ArchKDMWizard extends Wizard {
 	private Segment segmentPlannedArchitecture = null;
 	private Segment segmentActualArchitecture = null;
 	
+	private StructureModel structureDrifts = null;
+
 	private String pathPlannedArchitecture = null;
 	private String pathActualArchitecture = null;
 	
@@ -130,6 +133,21 @@ public class ArchKDMWizard extends Wizard {
 		} catch (KDMFileException e) {
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * @author Landi
+	 * @param executeAcc
+	 */
+	public void setStructureDrifts(StructureModel structureDrifts) {
+		this.structureDrifts = structureDrifts;
+	}
+	
+	/**
+	 * @return the structureDrifts
+	 */
+	public StructureModel getStructureDrifts() {
+		return structureDrifts;
 	}
 
 }

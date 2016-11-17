@@ -1,4 +1,4 @@
-package br.ufscar.arch_kdm.ui.views;
+package br.ufscar.arch_kdm.old.views;
 
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
