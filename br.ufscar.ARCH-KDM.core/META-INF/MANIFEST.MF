@@ -14,5 +14,6 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.11.1",
  br.ufscar.KDM-MANAGER.core
 Export-Package: br.ufscar.arch_kdm.core.architecturalCompilanceChecking,
  br.ufscar.arch_kdm.core.mapping,
+ br.ufscar.arch_kdm.core.util,
  br.ufscar.arch_kdm.old.model,
  br.ufscar.arch_kdm.old.util
