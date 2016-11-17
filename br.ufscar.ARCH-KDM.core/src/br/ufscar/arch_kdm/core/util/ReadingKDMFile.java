@@ -1,4 +1,4 @@
-package br.ufscar.ARCH_KDM.util;
+package br.ufscar.arch_kdm.core.util;
 
 import java.io.IOException;
 import java.util.ArrayList;

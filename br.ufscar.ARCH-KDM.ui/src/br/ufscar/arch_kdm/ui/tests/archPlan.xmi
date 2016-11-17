@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="ASCII"?>
+<kdm:Segment xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:action="http://www.eclipse.org/MoDisco/kdm/action" xmlns:code="http://www.eclipse.org/MoDisco/kdm/code" xmlns:kdm="http://www.eclipse.org/MoDisco/kdm/kdm" xmlns:structure="http://www.eclipse.org/MoDisco/kdm/structure" name="PlannedArchitecture">
+  <model xsi:type="structure:StructureModel" name="PlannedArchitecture">
+    <structureElement xsi:type="structure:Subsystem" name="ss1" outAggregated="//@model.0/@structureElement.0/@aggregated.0 //@model.0/@structureElement.0/@aggregated.1 //@model.0/@structureElement.0/@aggregated.2">
+      <aggregated from="//@model.0/@structureElement.0" to="//@model.0/@structureElement.0/@structureElement.0" relation="//@model.1/@codeElement.0/@codeElement.0/@actionRelation.0 //@model.1/@codeElement.0/@codeElement.0/@actionRelation.1 //@model.1/@codeElement.0/@codeElement.0/@actionRelation.2 //@model.1/@codeElement.0/@codeElement.1/@codeRelation.0 //@model.1/@codeElement.0/@codeElement.1/@codeRelation.1 //@model.1/@codeElement.0/@codeElement.1/@codeRelation.2 //@model.1/@codeElement.0/@codeElement.1/@codeRelation.3" density="7"/>
+      <aggregated from="//@model.0/@structureElement.0" to="//@model.0/@structureElement.0/@structureElement.1" relation="//@model.1/@codeElement.1/@codeElement.0/@actionRelation.0 //@model.1/@codeElement.1/@codeElement.0/@actionRelation.1 //@model.1/@codeElement.1/@codeElement.0/@actionRelation.2 //@model.1/@codeElement.1/@codeElement.1/@codeRelation.0 //@model.1/@codeElement.1/@codeElement.1/@codeRelation.1 //@model.1/@codeElement.1/@codeElement.1/@codeRelation.2 //@model.1/@codeElement.1/@codeElement.1/@codeRelation.3" density="7"/>
+      <aggregated from="//@model.0/@structureElement.0" to="//@model.0/@structureElement.0/@structureElement.2" relation="//@model.1/@codeElement.2/@codeElement.0/@actionRelation.0 //@model.1/@codeElement.2/@codeElement.0/@actionRelation.1 //@model.1/@codeElement.2/@codeElement.0/@actionRelation.2 //@model.1/@codeElement.2/@codeElement.1/@codeRelation.0 //@model.1/@codeElement.2/@codeElement.1/@codeRelation.1 //@model.1/@codeElement.2/@codeElement.1/@codeRelation.2 //@model.1/@codeElement.2/@codeElement.1/@codeRelation.3" density="7"/>
+      <structureElement xsi:type="structure:Layer" name="l3" inAggregated="//@model.0/@structureElement.0/@aggregated.0" outAggregated="//@model.0/@structureElement.0/@structureElement.0/@aggregated.0">
+        <aggregated from="//@model.0/@structureElement.0/@structureElement.0" to="//@model.0/@structureElement.0/@structureElement.1" relation="//@model.1/@codeElement.3/@codeElement.0/@actionRelation.0 //@model.1/@codeElement.3/@codeElement.0/@actionRelation.1 //@model.1/@codeElement.3/@codeElement.0/@actionRelation.2 //@model.1/@codeElement.3/@codeElement.1/@codeRelation.0 //@model.1/@codeElement.3/@codeElement.1/@codeRelation.1 //@model.1/@codeElement.3/@codeElement.1/@codeRelation.2 //@model.1/@codeElement.3/@codeElement.1/@codeRelation.3" density="7"/>
+      </structureElement>
+      <structureElement xsi:type="structure:Layer" name="l2" inAggregated="//@model.0/@structureElement.0/@aggregated.1 //@model.0/@structureElement.0/@structureElement.0/@aggregated.0" outAggregated="//@model.0/@structureElement.0/@structureElement.1/@aggregated.0">
+        <aggregated from="//@model.0/@structureElement.0/@structureElement.1" to="//@model.0/@structureElement.0/@structureElement.2" relation="//@model.1/@codeElement.4/@codeElement.0/@actionRelation.0 //@model.1/@codeElement.4/@codeElement.0/@actionRelation.1 //@model.1/@codeElement.4/@codeElement.0/@actionRelation.2 //@model.1/@codeElement.4/@codeElement.1/@codeRelation.0 //@model.1/@codeElement.4/@codeElement.1/@codeRelation.1 //@model.1/@codeElement.4/@codeElement.1/@codeRelation.2 //@model.1/@codeElement.4/@codeElement.1/@codeRelation.3" density="7"/>
+      </structureElement>
+      <structureElement xsi:type="structure:Layer" name="l1" inAggregated="//@model.0/@structureElement.0/@aggregated.2 //@model.0/@structureElement.0/@structureElement.1/@aggregated.0"/>
+    </structureElement>
+  </model>
+  <model xsi:type="code:CodeModel" name="InstancesReferenced">
+    <codeElement xsi:type="code:Module" name="HierarquicalDependBetween ss1 to l3">
+      <codeElement xsi:type="action:ActionElement" name="actionElement Instance">
+        <actionRelation xsi:type="action:Calls"/>
+        <actionRelation xsi:type="action:UsesType"/>
+        <actionRelation xsi:type="action:Creates"/>
+      </codeElement>
+      <codeElement xsi:type="code:CodeElement" name="codeElement Instance">
+        <codeRelation xsi:type="code:Extends"/>
+        <codeRelation xsi:type="code:Implements"/>
+        <codeRelation xsi:type="code:HasValue"/>
+        <codeRelation xsi:type="code:Imports"/>
+      </codeElement>
+    </codeElement>
+    <codeElement xsi:type="code:Module" name="HierarquicalDependBetween ss1 to l2">
+      <codeElement xsi:type="action:ActionElement" name="actionElement Instance">
+        <actionRelation xsi:type="action:Calls"/>
+        <actionRelation xsi:type="action:UsesType"/>
+        <actionRelation xsi:type="action:Creates"/>
+      </codeElement>
+      <codeElement xsi:type="code:CodeElement" name="codeElement Instance">
+        <codeRelation xsi:type="code:Extends"/>
+        <codeRelation xsi:type="code:Implements"/>
+        <codeRelation xsi:type="code:HasValue"/>
+        <codeRelation xsi:type="code:Imports"/>
+      </codeElement>
+    </codeElement>
+    <codeElement xsi:type="code:Module" name="HierarquicalDependBetween ss1 to l1">
+      <codeElement xsi:type="action:ActionElement" name="actionElement Instance">
+        <actionRelation xsi:type="action:Calls"/>
+        <actionRelation xsi:type="action:UsesType"/>
+        <actionRelation xsi:type="action:Creates"/>
+      </codeElement>
+      <codeElement xsi:type="code:CodeElement" name="codeElement Instance">
+        <codeRelation xsi:type="code:Extends"/>
+        <codeRelation xsi:type="code:Implements"/>
+        <codeRelation xsi:type="code:HasValue"/>
+        <codeRelation xsi:type="code:Imports"/>
+      </codeElement>
+    </codeElement>
+    <codeElement xsi:type="code:Module" name="LayerDependLevelBetween l3 to l2">
+      <codeElement xsi:type="action:ActionElement" name="actionElement Instance">
+        <actionRelation xsi:type="action:Calls"/>
+        <actionRelation xsi:type="action:UsesType"/>
+        <actionRelation xsi:type="action:Creates"/>
+      </codeElement>
+      <codeElement xsi:type="code:CodeElement" name="codeElement Instance">
+        <codeRelation xsi:type="code:Extends"/>
+        <codeRelation xsi:type="code:Implements"/>
+        <codeRelation xsi:type="code:HasValue"/>
+        <codeRelation xsi:type="code:Imports"/>
+      </codeElement>
+    </codeElement>
+    <codeElement xsi:type="code:Module" name="LayerDependLevelBetween l2 to l1">
+      <codeElement xsi:type="action:ActionElement" name="actionElement Instance">
+        <actionRelation xsi:type="action:Calls"/>
+        <actionRelation xsi:type="action:UsesType"/>
+        <actionRelation xsi:type="action:Creates"/>
+      </codeElement>
+      <codeElement xsi:type="code:CodeElement" name="codeElement Instance">
+        <codeRelation xsi:type="code:Extends"/>
+        <codeRelation xsi:type="code:Implements"/>
+        <codeRelation xsi:type="code:HasValue"/>
+        <codeRelation xsi:type="code:Imports"/>
+      </codeElement>
+    </codeElement>
+  </model>
+</kdm:Segment>

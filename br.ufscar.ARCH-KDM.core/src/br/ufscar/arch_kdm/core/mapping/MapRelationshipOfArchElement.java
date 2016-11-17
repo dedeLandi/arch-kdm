@@ -2,7 +2,7 @@
  * @author Landi
  * 
  */
-package br.ufscar.ARCH_KDM.mapping;
+package br.ufscar.arch_kdm.core.mapping;
 
 import java.util.ArrayList;
 import java.util.HashMap;

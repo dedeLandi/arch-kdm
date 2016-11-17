@@ -1,4 +1,4 @@
-package br.ufscar.ARCH_KDM.mapping;
+package br.ufscar.arch_kdm.core.mapping;
 
 import java.util.List;
 import java.util.Map;
@@ -9,7 +9,7 @@ import org.eclipse.gmt.modisco.omg.kdm.core.KDMRelationship;
 import org.eclipse.gmt.modisco.omg.kdm.structure.AbstractStructureElement;
 import org.eclipse.gmt.modisco.omg.kdm.structure.StructureModel;
 
-import br.ufscar.ARCH_KDM.util.GenericMethods;
+import br.ufscar.arch_kdm.core.util.GenericMethods;
 import br.ufscar.kdm_manager.core.readers.relationshipReader.enums.KDMTypeRelations;
 
 public class MapArchitecture {

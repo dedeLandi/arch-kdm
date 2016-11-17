@@ -2,7 +2,7 @@
  * @author Landi
  * 
  */
-package br.ufscar.ARCH_KDM.util;
+package br.ufscar.arch_kdm.core.util;
 
 import java.util.List;
 

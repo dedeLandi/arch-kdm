@@ -1,4 +1,4 @@
-package br.ufscar.ARCH_KDM.model;
+package br.ufscar.arch_kdm.core.model;
 
 import java.util.ArrayList;
 
