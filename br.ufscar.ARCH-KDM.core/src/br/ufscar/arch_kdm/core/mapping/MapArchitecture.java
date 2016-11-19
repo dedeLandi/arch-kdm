@@ -35,22 +35,6 @@ public class MapArchitecture {
 //		this.segmentToMap = segmentActualArchitecture;
 //	}
 
-	public StructureModel cleanAggregateds() {
-		for (AbstractStructureElement parentElement : this.structureToMap.getStructureElement()) {
-			cleanAggregateds(parentElement);
-		}
-		return this.structureToMap;
-	}
-	
-	private void cleanAggregateds(AbstractStructureElement parentElement) {
-		parentElement.getInAggregated().clear();
-		parentElement.getOutAggregated().clear();
-		parentElement.getAggregated().clear();
-		for (AbstractStructureElement childElement : parentElement.getStructureElement()) {
-			cleanAggregateds(childElement);
-		}
-	}
-	
 	public void mapInitialArchitecture(AbstractStructureElement abstractStructureElement, KDMEntity codeElement) {
 		abstractStructureElement.getImplementation().add(codeElement);
 	}
@@ -72,15 +56,21 @@ public class MapArchitecture {
 		
 		for (KDMEntity kdmEntity : elementToMap.getImplementation()) {
 			
+			for (KDMTypeRelations typeRelationship : KDMTypeRelations.values()) {
+				Map<AbstractStructureElement, List<KDMRelationship>> allRelations = MapRelationshipOfArchElement.getRelationFrom(typeRelationship, kdmEntity);
+				this.insertOrUpdateAggregated(elementToMap, allRelations);
+			}
+			
+			/**
 			Map<AbstractStructureElement, List<KDMRelationship>> allRelationsCalls = MapRelationshipOfArchElement.getRelationFrom(KDMTypeRelations.CALLS, kdmEntity);
 			this.insertOrUpdateAggregated(elementToMap, allRelationsCalls);
-
+			
 			Map<AbstractStructureElement, List<KDMRelationship>> allRelationsCreates = MapRelationshipOfArchElement.getRelationFrom(KDMTypeRelations.CREATES, kdmEntity);
 			this.insertOrUpdateAggregated(elementToMap, allRelationsCreates);
-
+			
 			Map<AbstractStructureElement, List<KDMRelationship>> allRelationsReads = MapRelationshipOfArchElement.getRelationFrom(KDMTypeRelations.READS, kdmEntity);
 			this.insertOrUpdateAggregated(elementToMap, allRelationsReads);
-
+			
 			Map<AbstractStructureElement, List<KDMRelationship>> allRelationsUsesType = MapRelationshipOfArchElement.getRelationFrom(KDMTypeRelations.USES_TYPE, kdmEntity);
 			this.insertOrUpdateAggregated(elementToMap, allRelationsUsesType);
 			
@@ -100,7 +90,7 @@ public class MapArchitecture {
 			this.insertOrUpdateAggregated(elementToMap, allRelationsImplements);
 			
 			Map<AbstractStructureElement, List<KDMRelationship>> allRelationsImports = MapRelationshipOfArchElement.getRelationFrom(KDMTypeRelations.IMPORTS, kdmEntity);
-			this.insertOrUpdateAggregated(elementToMap, allRelationsImports);
+			this.insertOrUpdateAggregated(elementToMap, allRelationsImports);*/
 					
 			
 		}
