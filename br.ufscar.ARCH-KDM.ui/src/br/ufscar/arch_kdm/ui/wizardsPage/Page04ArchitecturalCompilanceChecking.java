@@ -86,8 +86,15 @@ public class Page04ArchitecturalCompilanceChecking extends WizardPage {
 				public void run(IProgressMonitor monitor)
 						throws InvocationTargetException, InterruptedException {
 
+					monitor.beginTask("Processing the Architectural Compilance Checking", 100);
+					monitor.worked(0);
+					
 					ArchitecturalCompilanceChecking acc = 
-							new ArchitecturalCompilanceChecking(archKDMWizard.getSegmentPlannedArchitecture(), archKDMWizard.getSegmentActualArchitectureCompleteMap(), monitor);
+							new ArchitecturalCompilanceChecking(
+									archKDMWizard.getSegmentPlannedArchitecture(), 
+									archKDMWizard.getSegmentActualArchitectureCompleteMap(), 
+									archKDMWizard.getCodeActualArchitecture(),
+									monitor);
 					
 					StructureModel violations = acc.executeAcc();
 					
@@ -101,7 +108,7 @@ public class Page04ArchitecturalCompilanceChecking extends WizardPage {
 					}else{
 						failToGenerateViolations();
 					}
-					
+					monitor.done();
 				}
 			});
 			
@@ -117,7 +124,7 @@ public class Page04ArchitecturalCompilanceChecking extends WizardPage {
 	 * @author Landi
 	 */
 	protected void failToGenerateViolations() {
-		setErrorMessage("Please, fail to execute de compilance checking.");
+//		((WizardPage) getWizard().getPage("page04")).setErrorMessage("Please, fail to execute de compilance checking.");
 		
 	}
 
