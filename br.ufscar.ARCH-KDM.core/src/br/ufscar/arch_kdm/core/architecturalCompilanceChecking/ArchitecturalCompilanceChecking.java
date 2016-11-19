@@ -5,19 +5,19 @@
 package br.ufscar.arch_kdm.core.architecturalCompilanceChecking;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.gmt.modisco.omg.kdm.code.CodeModel;
 import org.eclipse.gmt.modisco.omg.kdm.kdm.Segment;
 import org.eclipse.gmt.modisco.omg.kdm.structure.AbstractStructureElement;
 import org.eclipse.gmt.modisco.omg.kdm.structure.StructureFactory;
 import org.eclipse.gmt.modisco.omg.kdm.structure.StructureModel;
 
-import br.ufscar.kdm_manager.core.filters.validateFilter.factory.ValidateFilterJavaFactory;
-import br.ufscar.kdm_manager.core.filters.validateFilter.interfaces.ValidateFilter;
-import br.ufscar.kdm_manager.core.readers.modelReader.factory.KDMModelReaderJavaFactory;
+import br.ufscar.arch_kdm.core.mapping.MapArchitecture;
+import br.ufscar.arch_kdm.core.util.GenericClean;
+import br.ufscar.arch_kdm.core.util.GenericCopy;
+import br.ufscar.arch_kdm.core.util.GenericMethods;
 
 /**
  * @author Landi
@@ -25,19 +25,26 @@ import br.ufscar.kdm_manager.core.readers.modelReader.factory.KDMModelReaderJava
  */
 public class ArchitecturalCompilanceChecking {
 	
-	private Segment plannedArchitecture;
-	private Segment actualArchitectureMapped;
-	
 	private StructureModel structureDrifts = null;
+	private StructureModel structureActualArchitecture = null;
+	private StructureModel structurePlannedArchitecture = null;
+	
+	private CodeModel codeActualArchitecture = null;
 	
 	private IProgressMonitor monitorProgress;
 
 	/**
 	 * 
+	 * @param plannedArchitecture
+	 * @param actualArchitectureMapped
+	 * @param codeActualArchitecture
+	 * @param monitorProgress
 	 */
-	public ArchitecturalCompilanceChecking(Segment plannedArchitecture, Segment actualArchitectureMapped, IProgressMonitor monitorProgress) {
-		this.plannedArchitecture = plannedArchitecture;
-		this.actualArchitectureMapped = actualArchitectureMapped;
+	public ArchitecturalCompilanceChecking(Segment plannedArchitecture, Segment actualArchitectureMapped, CodeModel codeActualArchitecture, IProgressMonitor monitorProgress) {
+		this.structurePlannedArchitecture = GenericMethods.getStructureArchitecture("PlannedArchitecture", plannedArchitecture);
+		this.structureActualArchitecture = GenericMethods.getStructureArchitecture("CompleteMap", actualArchitectureMapped);
+		this.codeActualArchitecture = codeActualArchitecture;
+		
 		this.monitorProgress = monitorProgress;
 	}
 	
@@ -47,53 +54,61 @@ public class ArchitecturalCompilanceChecking {
 	 * @throws InterruptedException 
 	 */
 	public StructureModel executeAcc() throws InterruptedException {
-		monitorProgress.beginTask("Processing the Architectural Compilance Checking", 100);
-		monitorProgress.worked(0);
-
-		structureDrifts = StructureFactory.eINSTANCE.createStructureModel();
-		structureDrifts.setName("violations");
 		
-		Collection<? extends AbstractStructureElement> copyOfAllStructureElements = this.getCopyStructureElementsOfActualArchitecture(this.actualArchitectureMapped);
+		monitorProgress.setTaskName("Preparing the XMI to make the Architectural Compilance Checking...");
+		structureDrifts = this.prepareAcc();
 		
-		if(copyOfAllStructureElements == null){
-			monitorProgress.setTaskName("Fail to copy elements from the actual architecture. Please, choose other XMI file.");
-			return null;
-		}
-		
-		structureDrifts.getStructureElement().addAll(copyOfAllStructureElements);
-		
+		monitorProgress.setTaskName("Executing the Architectural Compilance Checking...");
+		structureDrifts = this.acc(structureDrifts, structurePlannedArchitecture);
 		
 		//make the processing initiate here
 		for (int i = 0; i < 10; i++) {
 			Thread.sleep(500);
+			monitorProgress.setTaskName("Task : " + (i*10));
 			monitorProgress.worked(i*10);
 		}
 
-		monitorProgress.done();
 		return structureDrifts;
 	}
 
 	/**
 	 * @author Landi
-	 * @param actualArchitecture 
 	 * @return
 	 */
-	private Collection<? extends AbstractStructureElement> getCopyStructureElementsOfActualArchitecture(Segment actualArchitecture) {
+	private StructureModel prepareAcc() {
+		monitorProgress.setTaskName("Creating container..");
+		structureDrifts = StructureFactory.eINSTANCE.createStructureModel();
+		structureDrifts.setName("violations");
 		
-		ValidateFilter<?, ?> filter = ValidateFilterJavaFactory.eINSTANCE.createValidateFilterNameOfKDMFramework("");
-		Map<String, List<StructureModel>> allStructureModelActualArchitecture = KDMModelReaderJavaFactory.eINSTANCE.createKDMStructureModelReaderWithFilter(filter).getAllFromSegment(actualArchitecture);
-		
-		if(allStructureModelActualArchitecture.keySet().size() == 1){
-			for (String key : allStructureModelActualArchitecture.keySet()) {
-				if(allStructureModelActualArchitecture.get(key).size() == 1){
-					Collection<AbstractStructureElement> elementsToCopy = allStructureModelActualArchitecture.get(key).get(0).getStructureElement();
-					return EcoreUtil.copyAll(elementsToCopy);
-				}
-			}
+		monitorProgress.setTaskName("Copying the structural elements...");
+		Collection<AbstractStructureElement> elementsToCopy = this.structurePlannedArchitecture.getStructureElement();
+		Collection<AbstractStructureElement> copyOfAllStructureElements = EcoreUtil.copyAll(elementsToCopy);
+		if(copyOfAllStructureElements == null){
+			monitorProgress.setTaskName("Fail to copy elements from the actual architecture. Please, choose other XMI file.");
+			return null;
 		}
+		structureDrifts.getStructureElement().addAll(copyOfAllStructureElements);
+
+		monitorProgress.setTaskName("Cleaning wrong aggregated relationships...");
+		structureDrifts = GenericClean.cleanAggregateds(structureDrifts);
 		
-		return null;
+		monitorProgress.setTaskName("Updating the mapping of the architecture...");
+		structureDrifts = GenericCopy.copyImplementation(structureDrifts, structureActualArchitecture, codeActualArchitecture);
+
+		structureDrifts = new MapArchitecture(structureDrifts).mapCompleteArchitecture();
 		
+		return structureDrifts;
+	}
+
+	/**
+	 * @author Landi
+	 * @param violations
+	 * @param plannedArchitecture
+	 * @return
+	 */
+	private StructureModel acc(StructureModel violations, StructureModel plannedArchitecture) {
+		// TODO Auto-generated method stub
+		return violations;
 	}
 	
 }
