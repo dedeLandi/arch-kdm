@@ -1,5 +1,6 @@
 package br.ufscar.arch_kdm.ui.wizards;
 
+import org.eclipse.gmt.modisco.omg.kdm.code.CodeModel;
 import org.eclipse.gmt.modisco.omg.kdm.kdm.Segment;
 import org.eclipse.gmt.modisco.omg.kdm.structure.StructureModel;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -29,6 +30,8 @@ public class ArchKDMWizard extends Wizard {
 	private Segment segmentActualArchitectureCompleteMap = null;
 
 	private StructureModel structureDrifts = null;
+	
+	private CodeModel codeActualArchitecture = null;
 
 	private String pathPlannedArchitecture = null;
 	private String pathActualArchitecture = null;
@@ -133,7 +136,13 @@ public class ArchKDMWizard extends Wizard {
 	}
 
 	public String getPathActualArchitectureCompleteMap() {
-		return pathActualArchitectureCompleteMap;
+		if(this.pathActualArchitectureCompleteMap != null){
+			return this.pathActualArchitectureCompleteMap;
+		}else if(this.pathActualArchitecture != null){
+			return this.pathActualArchitecture;
+		}else{
+			return null;
+		}
 	}
 	
 	public void setPathActualArchitectureCompleteMap(String pathActualArchitectureCompleteMap) {
@@ -170,6 +179,20 @@ public class ArchKDMWizard extends Wizard {
 	 */
 	public StructureModel getStructureDrifts() {
 		return structureDrifts;
+	}
+
+	/**
+	 * @return the actualArchitecture
+	 */
+	public CodeModel getCodeActualArchitecture() {
+		return codeActualArchitecture;
+	}
+
+	/**
+	 * @param actualArchitecture the actualArchitecture to set
+	 */
+	public void setCodeActualArchitecture(CodeModel actualArchitecture) {
+		this.codeActualArchitecture = actualArchitecture;
 	}
 
 }
