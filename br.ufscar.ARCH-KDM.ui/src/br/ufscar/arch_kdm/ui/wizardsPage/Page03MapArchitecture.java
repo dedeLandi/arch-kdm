@@ -2,6 +2,7 @@ package br.ufscar.arch_kdm.ui.wizardsPage;
 
 import java.util.Map;
 
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gmt.modisco.omg.kdm.code.AbstractCodeElement;
 import org.eclipse.gmt.modisco.omg.kdm.code.CodeModel;
 import org.eclipse.gmt.modisco.omg.kdm.code.Package;
@@ -28,6 +29,7 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import br.ufscar.arch_kdm.core.mapping.MapArchitecture;
+import br.ufscar.arch_kdm.core.util.GenericClean;
 import br.ufscar.arch_kdm.core.util.GenericMethods;
 import br.ufscar.arch_kdm.ui.dialogs.SelectionModelDialog;
 import br.ufscar.arch_kdm.ui.util.IconsType;
@@ -39,10 +41,8 @@ public class Page03MapArchitecture extends WizardPage {
 	private Tree treeCodeElements = null;
 	private Tree treeElementsMapped = null;
 
-	private StructureModel plannedArchitecture = null;
 	private StructureModel completeMap = null;
 
-	private CodeModel actualArchitecture = null;
 	private Button bRemoveMap;
 	private Button bMap;
 	private boolean alreadyMap = false;
@@ -138,19 +138,21 @@ public class Page03MapArchitecture extends WizardPage {
 	}
 
 	protected void executeCompleteMap() {
-		if(completeMap == null){
+//		if(completeMap == null){
 			executeInitialMap();
 			((ArchKDMWizard)this.getWizard()).getSegmentActualArchitecture().getModel().add(completeMap);
 			completeMap = new MapArchitecture(completeMap).mapCompleteArchitecture();
 //			completeMap = new MapArchitecture(completeMap, ((ArchitecturalRefactoringWizard)this.getWizard()).getSegmentActualArchitecture()).mapCompleteArchitecture();
 			disableButtons();
-		}
+//		}
 	}
 	
 	private void executeInitialMap() {
-		completeMap = this.plannedArchitecture;
+//		completeMap = EcoreUtil.copy(this.plannedArchitecture);
+//		completeMap = this.plannedArchitecture;
 		completeMap.setName("CompleteMap");
-		completeMap = new MapArchitecture(completeMap).cleanAggregateds();
+		completeMap = GenericClean.cleanAggregateds(completeMap);
+//				new MapArchitecture(completeMap).cleanAggregateds();
 
 		TreeItem[] items = treeElementsMapped.getItems();
 		for (TreeItem treeItem : items) {
@@ -244,7 +246,6 @@ public class Page03MapArchitecture extends WizardPage {
 	}
 
 	private void cleanCompleteMap() {
-		this.completeMap = null;
 		this.setAlreadyMap(false);
 	}
 
@@ -347,9 +348,10 @@ public class Page03MapArchitecture extends WizardPage {
 	public void fillPlannedArchitecture() {
 		String textInterface = "Select the planned architectural model:";
 		treeArchitecturalElements.removeAll();
+		completeMap = null;
 		enableButtons();
 		Map<String, java.util.List<StructureModel>> allStructure = GenericMethods.getAllStructure(((ArchKDMWizard)this.getWizard()).getSegmentPlannedArchitecture());
-		plannedArchitecture = null;
+		StructureModel plannedArchitecture = null;
 		if(allStructure.keySet().size() == 1){
 			for (String key : allStructure.keySet()) {
 				if(allStructure.get(key).size() == 1){
@@ -361,9 +363,10 @@ public class Page03MapArchitecture extends WizardPage {
 		}else{
 			plannedArchitecture = (StructureModel) dialogWhatModelUse(allStructure, textInterface);
 		}
+		completeMap = EcoreUtil.copy(plannedArchitecture);
 
 		TreeItem treeItemParent = null;
-		for (AbstractStructureElement abstractStructureElement : plannedArchitecture.getStructureElement()) {
+		for (AbstractStructureElement abstractStructureElement : completeMap.getStructureElement()) {
 
 			treeItemParent = new TreeItem(treeArchitecturalElements, 0);
 			treeItemParent.setImage(IconsType.STRUCTURAL_ELEMENT.getImage());
@@ -410,20 +413,20 @@ public class Page03MapArchitecture extends WizardPage {
 		treeCodeElements.removeAll();
 		enableButtons();
 		Map<String, java.util.List<CodeModel>> allCode = GenericMethods.getAllCode(((ArchKDMWizard)this.getWizard()).getSegmentActualArchitecture());
-		actualArchitecture = null;
+		((ArchKDMWizard)this.getWizard()).setCodeActualArchitecture(null);
 		if(allCode.keySet().size() == 1){
 			for (String key : allCode.keySet()) {
 				if(allCode.get(key).size() == 1){
-					actualArchitecture = allCode.get(key).get(0); 
+					((ArchKDMWizard)this.getWizard()).setCodeActualArchitecture(allCode.get(key).get(0)); 
 				}else{
-					actualArchitecture = (CodeModel) dialogWhatModelUse(allCode.get(key), textInterface);
+					((ArchKDMWizard)this.getWizard()).setCodeActualArchitecture((CodeModel) dialogWhatModelUse(allCode.get(key), textInterface));
 				}
 			}
 		}else{
-			actualArchitecture = (CodeModel) dialogWhatModelUse(allCode, textInterface);
+			((ArchKDMWizard)this.getWizard()).setCodeActualArchitecture((CodeModel) dialogWhatModelUse(allCode, textInterface));
 		}
 
-		for (AbstractCodeElement abstractCodeElement : actualArchitecture.getCodeElement()) {
+		for (AbstractCodeElement abstractCodeElement : ((ArchKDMWizard)this.getWizard()).getCodeActualArchitecture().getCodeElement()) {
 
 			TreeItem treeItemParent = new TreeItem(treeCodeElements, 0);
 			treeItemParent.setImage(IconsType.getImageByElement(abstractCodeElement));
