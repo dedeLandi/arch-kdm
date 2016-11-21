@@ -20,8 +20,8 @@ public class Page05ViewDrifts extends WizardPage {
 	 */
 	public Page05ViewDrifts() {
 		super("page05");
-		setTitle("Wizard Page title");
-		setDescription("Wizard Page description");
+		setTitle("Architectural Compilance Checking Wizard");
+		setDescription("Viewing of the violations founded");
 	}
 
 	/**
