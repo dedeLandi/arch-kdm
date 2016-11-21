@@ -4,14 +4,16 @@
  */
 package br.ufscar.arch_kdm.core.architecturalCompilanceChecking;
 
-import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gmt.modisco.omg.kdm.code.CodeModel;
+import org.eclipse.gmt.modisco.omg.kdm.core.AggregatedRelationship;
+import org.eclipse.gmt.modisco.omg.kdm.core.KDMEntity;
+import org.eclipse.gmt.modisco.omg.kdm.core.KDMRelationship;
 import org.eclipse.gmt.modisco.omg.kdm.kdm.Segment;
-import org.eclipse.gmt.modisco.omg.kdm.structure.AbstractStructureElement;
-import org.eclipse.gmt.modisco.omg.kdm.structure.StructureFactory;
 import org.eclipse.gmt.modisco.omg.kdm.structure.StructureModel;
 
 import br.ufscar.arch_kdm.core.mapping.MapArchitecture;
@@ -32,6 +34,8 @@ public class ArchitecturalCompilanceChecking {
 	private CodeModel codeActualArchitecture = null;
 	
 	private IProgressMonitor monitorProgress;
+	private int monitorProgressPercent = 0;
+	
 
 	/**
 	 * 
@@ -55,44 +59,48 @@ public class ArchitecturalCompilanceChecking {
 	 */
 	public StructureModel executeAcc() throws InterruptedException {
 		
-		monitorProgress.setTaskName("Preparing the XMI to make the Architectural Compilance Checking...");
+		updateMonitor("Preparing the XMI to make the Architectural Compilance Checking...");
 		structureDrifts = this.prepareAcc();
 		
-		monitorProgress.setTaskName("Executing the Architectural Compilance Checking...");
+		updateMonitor("Executing the Architectural Compilance Checking...");
 		structureDrifts = this.acc(structureDrifts, structurePlannedArchitecture);
 		
-		//make the processing initiate here
-		for (int i = 0; i < 10; i++) {
-			Thread.sleep(500);
-			monitorProgress.setTaskName("Task : " + (i*10));
-			monitorProgress.worked(i*10);
-		}
-
 		return structureDrifts;
+	}
+
+	private void updateMonitor(String text) throws InterruptedException {
+		monitorProgress.subTask(text);
+		Thread.sleep(500);
+		monitorProgressPercent = monitorProgressPercent +10;
+		monitorProgress.worked(monitorProgressPercent);
 	}
 
 	/**
 	 * @author Landi
 	 * @return
+	 * @throws InterruptedException 
 	 */
-	private StructureModel prepareAcc() {
-		monitorProgress.setTaskName("Creating container..");
-		structureDrifts = StructureFactory.eINSTANCE.createStructureModel();
+	private StructureModel prepareAcc() throws InterruptedException {
+		updateMonitor("Creating container...");
+//		structureDrifts = StructureFactory.eINSTANCE.createStructureModel();
+		structureDrifts = EcoreUtil.copy(this.structurePlannedArchitecture);
 		structureDrifts.setName("violations");
 		
-		monitorProgress.setTaskName("Copying the structural elements...");
-		Collection<AbstractStructureElement> elementsToCopy = this.structurePlannedArchitecture.getStructureElement();
-		Collection<AbstractStructureElement> copyOfAllStructureElements = EcoreUtil.copyAll(elementsToCopy);
-		if(copyOfAllStructureElements == null){
-			monitorProgress.setTaskName("Fail to copy elements from the actual architecture. Please, choose other XMI file.");
-			return null;
-		}
-		structureDrifts.getStructureElement().addAll(copyOfAllStructureElements);
+//		updateMonitor("Copying the structural elements...");
+//		Collection<AbstractStructureElement> elementsToCopy = this.structurePlannedArchitecture.getStructureElement();
+//		Collection<AbstractStructureElement> copyOfAllStructureElements = EcoreUtil.copyAll(elementsToCopy);
+//		if(copyOfAllStructureElements == null){
+//			monitorProgress.subTask("Fail to copy elements from the actual architecture. Please, choose other XMI file.");
+//			Thread.sleep(1500);
+//			return null;
+//		}
+//		structureDrifts.getStructureElement().addAll(copyOfAllStructureElements);
 
-		monitorProgress.setTaskName("Cleaning wrong aggregated relationships...");
+		updateMonitor("Cleaning wrong aggregated relationships...");
 		structureDrifts = GenericClean.cleanAggregateds(structureDrifts);
 		
-		monitorProgress.setTaskName("Updating the mapping of the architecture...");
+		
+		updateMonitor("Updating the mapping of the architecture...");
 		structureDrifts = GenericCopy.copyImplementation(structureDrifts, structureActualArchitecture, codeActualArchitecture);
 
 		structureDrifts = new MapArchitecture(structureDrifts).mapCompleteArchitecture();
@@ -107,8 +115,54 @@ public class ArchitecturalCompilanceChecking {
 	 * @return
 	 */
 	private StructureModel acc(StructureModel violations, StructureModel plannedArchitecture) {
-		// TODO Auto-generated method stub
+		
+		List<AggregatedRelationship> aggregatedsThatCanExists = GenericMethods.getAllAggregateds(plannedArchitecture);
+		
+		List<AggregatedRelationship> aggregatedsActualArchitecture = GenericMethods.getAllAggregateds(violations);
+		
+		for (AggregatedRelationship aggregatedThatCanExist : aggregatedsThatCanExists) {
+			KDMEntity from = aggregatedThatCanExist.getFrom();
+			KDMEntity to = aggregatedThatCanExist.getTo();
+			List<KDMRelationship> relationsThatCanExist = aggregatedThatCanExist.getRelation();
+			
+			List<AggregatedRelationship> aggregatedsToAvaliate = GenericMethods.getSpecificAggregated(from, to, aggregatedsActualArchitecture);
+			
+			for (AggregatedRelationship aggregatedToAvaliate : aggregatedsToAvaliate) {
+				
+				excludeRelationshipType(relationsThatCanExist, aggregatedToAvaliate);
+				
+			}
+			
+		}
+		
+		GenericMethods.removeAggregatedRelationshipWithDensityEquals(violations, 0);
+		
+		GenericMethods.removeAggregatedRelationshipToFromEquals(violations);
+		
 		return violations;
+	}
+
+	/**
+	 * @author Landi
+	 * @param relationsThatCanExist
+	 * @param actualRelations
+	 * @return 
+	 */
+	private void excludeRelationshipType(List<KDMRelationship> relationshipToExclude, AggregatedRelationship aggregatedToAvaliate) {
+		
+		for (KDMRelationship exclude : relationshipToExclude) {
+			
+			for (Iterator<KDMRelationship> iterator = aggregatedToAvaliate.getRelation().iterator(); iterator.hasNext();) {
+				KDMRelationship kdmRelationship = (KDMRelationship) iterator.next();
+				
+				if(exclude.getClass().equals(kdmRelationship.getClass())){
+					iterator.remove();
+					int value = aggregatedToAvaliate.getDensity() - 1;
+					aggregatedToAvaliate.setDensity(value);
+				}
+			}
+			
+		}
 	}
 	
 }
