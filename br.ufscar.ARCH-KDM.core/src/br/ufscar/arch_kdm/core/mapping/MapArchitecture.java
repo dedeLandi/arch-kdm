@@ -15,7 +15,6 @@ import br.ufscar.kdm_manager.core.readers.relationshipReader.enums.KDMTypeRelati
 public class MapArchitecture {
 
 	private StructureModel structureToMap;
-//	private Segment segmentToMap;
 	
 
 	public MapArchitecture() {
@@ -26,19 +25,21 @@ public class MapArchitecture {
 		this.structureToMap = completeMap;
 	}
 
-//	/**
-//	 * @param completeMap
-//	 * @param segmentActualArchitecture
-//	 */
-//	public MapArchitecture(StructureModel completeMap, Segment segmentActualArchitecture) {
-//		this.structureToMap = completeMap;
-//		this.segmentToMap = segmentActualArchitecture;
-//	}
-
+	/**
+	 * 
+	 * @author Landi
+	 * @param abstractStructureElement
+	 * @param codeElement
+	 */
 	public void mapInitialArchitecture(AbstractStructureElement abstractStructureElement, KDMEntity codeElement) {
 		abstractStructureElement.getImplementation().add(codeElement);
 	}
 
+	/**
+	 * 
+	 * @author Landi
+	 * @return
+	 */
 	public StructureModel mapCompleteArchitecture() {
 		for (AbstractStructureElement abstractStructureElement : this.structureToMap.getStructureElement()) {
 			
@@ -57,41 +58,10 @@ public class MapArchitecture {
 		for (KDMEntity kdmEntity : elementToMap.getImplementation()) {
 			
 			for (KDMTypeRelations typeRelationship : KDMTypeRelations.values()) {
-				Map<AbstractStructureElement, List<KDMRelationship>> allRelations = MapRelationshipOfArchElement.getRelationFrom(typeRelationship, kdmEntity, this.structureToMap);
+				Map<AbstractStructureElement, List<KDMRelationship>> allRelations = 
+						MapRelationshipOfArchElement.getRelationFrom(typeRelationship, kdmEntity, this.structureToMap);
 				this.insertOrUpdateAggregated(elementToMap, allRelations);
 			}
-			
-			/**
-			Map<AbstractStructureElement, List<KDMRelationship>> allRelationsCalls = MapRelationshipOfArchElement.getRelationFrom(KDMTypeRelations.CALLS, kdmEntity);
-			this.insertOrUpdateAggregated(elementToMap, allRelationsCalls);
-			
-			Map<AbstractStructureElement, List<KDMRelationship>> allRelationsCreates = MapRelationshipOfArchElement.getRelationFrom(KDMTypeRelations.CREATES, kdmEntity);
-			this.insertOrUpdateAggregated(elementToMap, allRelationsCreates);
-			
-			Map<AbstractStructureElement, List<KDMRelationship>> allRelationsReads = MapRelationshipOfArchElement.getRelationFrom(KDMTypeRelations.READS, kdmEntity);
-			this.insertOrUpdateAggregated(elementToMap, allRelationsReads);
-			
-			Map<AbstractStructureElement, List<KDMRelationship>> allRelationsUsesType = MapRelationshipOfArchElement.getRelationFrom(KDMTypeRelations.USES_TYPE, kdmEntity);
-			this.insertOrUpdateAggregated(elementToMap, allRelationsUsesType);
-			
-			Map<AbstractStructureElement, List<KDMRelationship>> allRelationsWrites = MapRelationshipOfArchElement.getRelationFrom(KDMTypeRelations.WRITES, kdmEntity);
-			this.insertOrUpdateAggregated(elementToMap, allRelationsWrites);
-			
-			Map<AbstractStructureElement, List<KDMRelationship>> allRelationsExtends = MapRelationshipOfArchElement.getRelationFrom(KDMTypeRelations.EXTENDS, kdmEntity);
-			this.insertOrUpdateAggregated(elementToMap, allRelationsExtends);
-			
-			Map<AbstractStructureElement, List<KDMRelationship>> allRelationsHasType = MapRelationshipOfArchElement.getRelationFrom(KDMTypeRelations.HAS_TYPE, kdmEntity);
-			this.insertOrUpdateAggregated(elementToMap, allRelationsHasType);
-			
-			Map<AbstractStructureElement, List<KDMRelationship>> allRelationsHasValue = MapRelationshipOfArchElement.getRelationFrom(KDMTypeRelations.HAS_VALUE, kdmEntity);
-			this.insertOrUpdateAggregated(elementToMap, allRelationsHasValue);
-			
-			Map<AbstractStructureElement, List<KDMRelationship>> allRelationsImplements = MapRelationshipOfArchElement.getRelationFrom(KDMTypeRelations.IMPLEMENTS, kdmEntity);
-			this.insertOrUpdateAggregated(elementToMap, allRelationsImplements);
-			
-			Map<AbstractStructureElement, List<KDMRelationship>> allRelationsImports = MapRelationshipOfArchElement.getRelationFrom(KDMTypeRelations.IMPORTS, kdmEntity);
-			this.insertOrUpdateAggregated(elementToMap, allRelationsImports);*/
-					
 			
 		}
 		
