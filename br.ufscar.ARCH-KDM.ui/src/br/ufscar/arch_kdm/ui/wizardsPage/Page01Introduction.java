@@ -28,9 +28,9 @@ public class Page01Introduction extends WizardPage {
 
 		setControl(container);
 		
-		Label lDescritption = new Label(container, SWT.WRAP | SWT.HORIZONTAL);
+		Label lDescritption = new Label(container, SWT.WRAP | SWT.HORIZONTAL | SWT.CENTER);
 		lDescritption.setBounds(10, 10, 554, 314);
-		lDescritption.setText("Hello developer!\r\n\r\nThis wizard aims to facilitate your Architectural Compilance Checking based on the actual system (KDM instance) and the Architectural Description (DCL-KDM instance).\r\n\r\nLets go to start the wizard!");
+		lDescritption.setText("Hello developer!\r\n\r\nThis wizard aims to facilitate your Architectural Compilance Checking based on the actual system (actual-KDM instance) and the Architectural Description (planned-KDM instance).\r\n\r\nLets go to start the wizard!");
 	}
 	
 	@Override
