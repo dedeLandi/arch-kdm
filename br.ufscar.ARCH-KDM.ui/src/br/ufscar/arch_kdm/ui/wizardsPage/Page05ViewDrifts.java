@@ -4,6 +4,7 @@
  */
 package br.ufscar.arch_kdm.ui.wizardsPage;
 
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -31,6 +32,14 @@ public class Page05ViewDrifts extends WizardPage {
 		Composite container = new Composite(parent, SWT.NULL);
 
 		setControl(container);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.wizard.WizardPage#getNextPage()
+	 */
+	@Override
+	public IWizardPage getNextPage() {
+		return null;
 	}
 
 }
