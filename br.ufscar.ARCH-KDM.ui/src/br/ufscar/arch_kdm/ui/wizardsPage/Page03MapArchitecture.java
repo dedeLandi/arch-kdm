@@ -46,6 +46,7 @@ public class Page03MapArchitecture extends WizardPage {
 	private Button bRemoveMap;
 	private Button bMap;
 	private boolean alreadyMap = false;
+	private Button bSaveCompleteMap;
 
 	/**
 	 * Create the wizard.
@@ -123,7 +124,7 @@ public class Page03MapArchitecture extends WizardPage {
 		gd_treeElementsMapped.minimumHeight = 90;
 		treeElementsMapped.setLayoutData(gd_treeElementsMapped);
 
-		Button bSaveCompleteMap = new Button(container, SWT.NONE);
+		bSaveCompleteMap = new Button(container, SWT.NONE);
 		GridData gd_bSaveCompleteMap = new GridData(SWT.CENTER, SWT.CENTER, false, false, 2, 1);
 		gd_bSaveCompleteMap.widthHint = 150;
 		bSaveCompleteMap.setLayoutData(gd_bSaveCompleteMap);
@@ -133,6 +134,7 @@ public class Page03MapArchitecture extends WizardPage {
 				if(validateAllElementsMap()){
 					executeCompleteMap();
 					save();
+					disableButtons();
 				}
 			}
 		});
@@ -141,21 +143,14 @@ public class Page03MapArchitecture extends WizardPage {
 	}
 
 	protected void executeCompleteMap() {
-//		if(completeMap == null){
-			executeInitialMap();
-			((ArchKDMWizard)this.getWizard()).getSegmentActualArchitecture().getModel().add(completeMap);
-			completeMap = new MapArchitecture(completeMap).mapCompleteArchitecture();
-//			completeMap = new MapArchitecture(completeMap, ((ArchitecturalRefactoringWizard)this.getWizard()).getSegmentActualArchitecture()).mapCompleteArchitecture();
-			disableButtons();
-//		}
+		executeInitialMap();
+		((ArchKDMWizard)this.getWizard()).getSegmentActualArchitecture().getModel().add(completeMap);
+		completeMap = new MapArchitecture(completeMap).mapCompleteArchitecture();
 	}
-	
+
 	private void executeInitialMap() {
-//		completeMap = EcoreUtil.copy(this.plannedArchitecture);
-//		completeMap = this.plannedArchitecture;
 		completeMap.setName("CompleteMap");
 		completeMap = GenericClean.cleanAggregateds(completeMap);
-//				new MapArchitecture(completeMap).cleanAggregateds();
 
 		TreeItem[] items = treeElementsMapped.getItems();
 		for (TreeItem treeItem : items) {
@@ -170,10 +165,12 @@ public class Page03MapArchitecture extends WizardPage {
 	private void disableButtons() {
 		bMap.setEnabled(false);
 		bRemoveMap.setEnabled(false);
+		bSaveCompleteMap.setEnabled(false);
 	}
 	private void enableButtons() {
 		bMap.setEnabled(true);
 		bRemoveMap.setEnabled(true);
+		bSaveCompleteMap.setEnabled(true);
 	}
 
 	private boolean validateAllElementsMap() {
@@ -224,18 +221,18 @@ public class Page03MapArchitecture extends WizardPage {
 
 	protected void save() {
 		String KDMPath = ((ArchKDMWizard)this.getWizard()).getPathActualArchitecture().replace(".xmi", "-mapped.xmi");
-		
-		
+
+
 		GenericMethods.serializeSegment(KDMPath, ((ArchKDMWizard)this.getWizard()).getSegmentActualArchitecture());
-		
+
 		((ArchKDMWizard)this.getWizard()).setPathActualArchitectureCompleteMap(KDMPath);
 
 		((ArchKDMWizard)this.getWizard()).readCompleteMap();
-		
+
 		this.setAlreadyMap(true);
-		
+
 		getWizard().getContainer().updateButtons();
-		
+
 	}
 
 	protected void removeMappedElement() {
@@ -342,6 +339,7 @@ public class Page03MapArchitecture extends WizardPage {
 
 	@Override
 	public IWizardPage getNextPage() {
+		((Page04ArchitecturalCompilanceChecking) getWizard().getPage("page04")).setPreviousPage("page03");
 		return getWizard().getPage("page04");
 	}
 
