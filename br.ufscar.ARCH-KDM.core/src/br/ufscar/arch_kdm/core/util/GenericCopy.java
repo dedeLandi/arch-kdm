@@ -40,7 +40,8 @@ public class GenericCopy {
 	 */
 	private static void copyImplementation(AbstractStructureElement element, StructureModel originalStructure, CodeModel originalCode) {
 
-		Collection<? extends KDMEntity> implementation = GenericCopy.getCopyListOfCodeElements(GenericMethods.getImplementationOf(element, originalStructure), originalCode);
+		Collection<? extends KDMEntity> implementation = GenericCopy.getCopyListOfCodeElements(GenericMethods.getImplementationOf(element, originalStructure), 
+				originalCode);
 		element.getImplementation().addAll(implementation);
 
 		for (AbstractStructureElement child : element.getStructureElement()) {
