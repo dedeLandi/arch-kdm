@@ -57,7 +57,7 @@ public class MapArchitecture {
 		for (KDMEntity kdmEntity : elementToMap.getImplementation()) {
 			
 			for (KDMTypeRelations typeRelationship : KDMTypeRelations.values()) {
-				Map<AbstractStructureElement, List<KDMRelationship>> allRelations = MapRelationshipOfArchElement.getRelationFrom(typeRelationship, kdmEntity);
+				Map<AbstractStructureElement, List<KDMRelationship>> allRelations = MapRelationshipOfArchElement.getRelationFrom(typeRelationship, kdmEntity, this.structureToMap);
 				this.insertOrUpdateAggregated(elementToMap, allRelations);
 			}
 			
