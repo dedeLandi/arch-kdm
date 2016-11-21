@@ -24,6 +24,8 @@ import org.eclipse.swt.widgets.Label;
 import br.ufscar.arch_kdm.core.architecturalCompilanceChecking.ArchitecturalCompilanceChecking;
 import br.ufscar.arch_kdm.core.util.GenericMethods;
 import br.ufscar.arch_kdm.ui.wizards.ArchKDMWizard;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 
 /**
  * @author Landi
@@ -86,7 +88,7 @@ public class Page04ArchitecturalCompilanceChecking extends WizardPage {
 				public void run(IProgressMonitor monitor)
 						throws InvocationTargetException, InterruptedException {
 
-					monitor.beginTask("Processing the Architectural Compilance Checking", 100);
+					monitor.beginTask("Architectural Compilance Checking", 100);
 					monitor.worked(0);
 					
 					ArchitecturalCompilanceChecking acc = 
@@ -106,7 +108,8 @@ public class Page04ArchitecturalCompilanceChecking extends WizardPage {
 						setCanFlip(true);
 						setAnalisisComplete(true);
 					}else{
-						failToGenerateViolations();
+						setErrorMessage("Fail to execute de compilance checking.");
+						System.out.println("fail to generate the structure violations");
 					}
 					monitor.done();
 				}
@@ -120,14 +123,6 @@ public class Page04ArchitecturalCompilanceChecking extends WizardPage {
 		}
 	}
 	
-	/**
-	 * @author Landi
-	 */
-	protected void failToGenerateViolations() {
-//		((WizardPage) getWizard().getPage("page04")).setErrorMessage("Please, fail to execute de compilance checking.");
-		
-	}
-
 	/**
 	 * @author Landi
 	 */
