@@ -22,7 +22,9 @@ import org.eclipse.gmt.modisco.omg.kdm.code.StorableUnit;
 import org.eclipse.gmt.modisco.omg.kdm.core.KDMEntity;
 import org.eclipse.gmt.modisco.omg.kdm.core.KDMRelationship;
 import org.eclipse.gmt.modisco.omg.kdm.structure.AbstractStructureElement;
+import org.eclipse.gmt.modisco.omg.kdm.structure.StructureModel;
 
+import br.ufscar.arch_kdm.core.util.GenericMethods;
 import br.ufscar.kdm_manager.core.readers.relationshipReader.enums.KDMTypeRelations;
 import br.ufscar.kdm_manager.core.recovers.recoverCodeHierarchy.factory.KDMRecoverCodeHierarchyJavaFactory;
 
@@ -64,10 +66,10 @@ public class MapRelationshipOfArchElement {
 	 * @param entityToAvaliate
 	 * @return
 	 */
-	public static Map<AbstractStructureElement, List<KDMRelationship>> getRelationFrom(KDMTypeRelations typeRelation, KDMEntity entityToAvaliate){
+	public static Map<AbstractStructureElement, List<KDMRelationship>> getRelationFrom(KDMTypeRelations typeRelation, KDMEntity entityToAvaliate, StructureModel structureToSearch){
 		initOtherRelations();
 		
-		return MapRelationshipOfArchElement.getRelationsByTo(typeRelation, entityToAvaliate);
+		return MapRelationshipOfArchElement.getRelationsByTo(typeRelation, entityToAvaliate, structureToSearch);
 		
 		/*switch (typeRelation) {
 		
@@ -106,7 +108,7 @@ public class MapRelationshipOfArchElement {
 	 * @return
 	 */
 	private static Map<AbstractStructureElement, List<KDMRelationship>> getRelationsByTo(KDMTypeRelations typeRelation,
-			KDMEntity entityToAvaliate) {
+			KDMEntity entityToAvaliate, StructureModel structureToSearch) {
 		List<?> allRelationshipOf = null;
 		
 		if(entityToAvaliate instanceof Package){
@@ -119,7 +121,7 @@ public class MapRelationshipOfArchElement {
 			allRelationshipOf = typeRelation.getReader().getAllRelationshipOf((EnumeratedType)entityToAvaliate);
 		}
 		
-		return MapRelationshipOfArchElement.createMapByTo(allRelationshipOf, typeRelation);
+		return MapRelationshipOfArchElement.createMapByTo(allRelationshipOf, typeRelation, structureToSearch);
 	}
 	
 	/**
@@ -128,11 +130,11 @@ public class MapRelationshipOfArchElement {
 	 * @param allRelationshipOf
 	 * @return
 	 */
-	private static <T> Map<AbstractStructureElement, List<KDMRelationship>> createMapByTo(List<T> allRelationshipOf, KDMTypeRelations typeRelation) {
+	private static <T> Map<AbstractStructureElement, List<KDMRelationship>> createMapByTo(List<T> allRelationshipOf, KDMTypeRelations typeRelation, StructureModel structureToSearch) {
 		Map<AbstractStructureElement, List<KDMRelationship>> map = new HashMap<AbstractStructureElement, List<KDMRelationship>>();
 		
 		for (T relation : allRelationshipOf) {
-			AbstractStructureElement element = MapRelationshipOfArchElement.getArchitecturalElementFromOrTo(((KDMRelationship) relation).getTo());
+			AbstractStructureElement element = MapRelationshipOfArchElement.getArchitecturalElementFromOrTo(((KDMRelationship) relation).getTo(), structureToSearch);
 			
 			if(element != null){
 				
@@ -158,29 +160,63 @@ public class MapRelationshipOfArchElement {
 	 * @param kdmEntity
 	 * @return
 	 */
-	public static AbstractStructureElement getArchitecturalElementFromOrTo(KDMEntity kdmEntity) {
+	public static AbstractStructureElement getArchitecturalElementFromOrTo(KDMEntity kdmEntity, StructureModel structureToSearch) {
 		
+		AbstractStructureElement fromOrTo = null;
 		if(kdmEntity instanceof StorableUnit){
-			return KDMRecoverCodeHierarchyJavaFactory.eINSTANCE.createRecoverCodeStructureHierarchyFirstArchitecturalElement().getHierarchyOf((StorableUnit)kdmEntity);
+			fromOrTo = KDMRecoverCodeHierarchyJavaFactory.eINSTANCE.createRecoverCodeStructureHierarchyFirstArchitecturalElement().getHierarchyOf((StorableUnit)kdmEntity);
 		}else if(kdmEntity instanceof MethodUnit){
-			return KDMRecoverCodeHierarchyJavaFactory.eINSTANCE.createRecoverCodeStructureHierarchyFirstArchitecturalElement().getHierarchyOf((MethodUnit)kdmEntity);
+			fromOrTo = KDMRecoverCodeHierarchyJavaFactory.eINSTANCE.createRecoverCodeStructureHierarchyFirstArchitecturalElement().getHierarchyOf((MethodUnit)kdmEntity);
 		}else if(kdmEntity instanceof ClassUnit){
-			return KDMRecoverCodeHierarchyJavaFactory.eINSTANCE.createRecoverCodeStructureHierarchyFirstArchitecturalElement().getHierarchyOf((ClassUnit)kdmEntity);
+			fromOrTo = KDMRecoverCodeHierarchyJavaFactory.eINSTANCE.createRecoverCodeStructureHierarchyFirstArchitecturalElement().getHierarchyOf((ClassUnit)kdmEntity);
 		}else if(kdmEntity instanceof InterfaceUnit){
-			return KDMRecoverCodeHierarchyJavaFactory.eINSTANCE.createRecoverCodeStructureHierarchyFirstArchitecturalElement().getHierarchyOf((InterfaceUnit)kdmEntity);
+			fromOrTo = KDMRecoverCodeHierarchyJavaFactory.eINSTANCE.createRecoverCodeStructureHierarchyFirstArchitecturalElement().getHierarchyOf((InterfaceUnit)kdmEntity);
 		}else if(kdmEntity instanceof EnumeratedType){
-			return KDMRecoverCodeHierarchyJavaFactory.eINSTANCE.createRecoverCodeStructureHierarchyFirstArchitecturalElement().getHierarchyOf((EnumeratedType)kdmEntity);
+			fromOrTo = KDMRecoverCodeHierarchyJavaFactory.eINSTANCE.createRecoverCodeStructureHierarchyFirstArchitecturalElement().getHierarchyOf((EnumeratedType)kdmEntity);
 		}else if(kdmEntity instanceof ActionElement){
-			return KDMRecoverCodeHierarchyJavaFactory.eINSTANCE.createRecoverCodeStructureHierarchyFirstArchitecturalElement().getHierarchyOf((ActionElement)kdmEntity);
+			fromOrTo = KDMRecoverCodeHierarchyJavaFactory.eINSTANCE.createRecoverCodeStructureHierarchyFirstArchitecturalElement().getHierarchyOf((ActionElement)kdmEntity);
 		}else if(kdmEntity instanceof TryUnit){
-			return KDMRecoverCodeHierarchyJavaFactory.eINSTANCE.createRecoverCodeStructureHierarchyFirstArchitecturalElement().getHierarchyOf((TryUnit)kdmEntity);
+			fromOrTo = KDMRecoverCodeHierarchyJavaFactory.eINSTANCE.createRecoverCodeStructureHierarchyFirstArchitecturalElement().getHierarchyOf((TryUnit)kdmEntity);
 		}else if(kdmEntity instanceof CatchUnit){
-			return KDMRecoverCodeHierarchyJavaFactory.eINSTANCE.createRecoverCodeStructureHierarchyFirstArchitecturalElement().getHierarchyOf((CatchUnit)kdmEntity);
+			fromOrTo = KDMRecoverCodeHierarchyJavaFactory.eINSTANCE.createRecoverCodeStructureHierarchyFirstArchitecturalElement().getHierarchyOf((CatchUnit)kdmEntity);
 		}else if(kdmEntity instanceof BlockUnit){
-			return KDMRecoverCodeHierarchyJavaFactory.eINSTANCE.createRecoverCodeStructureHierarchyFirstArchitecturalElement().getHierarchyOf((BlockUnit)kdmEntity);
+			fromOrTo = KDMRecoverCodeHierarchyJavaFactory.eINSTANCE.createRecoverCodeStructureHierarchyFirstArchitecturalElement().getHierarchyOf((BlockUnit)kdmEntity);
 		}
 		
-		return null;
+		if(fromOrTo != null){
+			for (AbstractStructureElement abstractStructureElement : structureToSearch.getStructureElement()) {
+				fromOrTo = getArchitecturalElementFromOrTo(fromOrTo, abstractStructureElement);
+				if(fromOrTo != null){
+					break;
+				}
+			}
+		}
+		return fromOrTo;
+	}
+
+	/**
+	 * @author Landi
+	 * @param kdmEntity
+	 * @param abstractStructureElement
+	 * @return 
+	 */
+	private static AbstractStructureElement getArchitecturalElementFromOrTo(AbstractStructureElement elementToSearch,
+			AbstractStructureElement parentElement) {
+		String pathElementToSearch = GenericMethods.getPathFromStructureElement(elementToSearch);
+		String pathParentElement = GenericMethods.getPathFromStructureElement(parentElement);
+		if(pathElementToSearch.equalsIgnoreCase(pathParentElement)){
+			return parentElement;
+		}
+		
+		AbstractStructureElement fromOrTo = null;
+		for (AbstractStructureElement childElement : parentElement.getStructureElement()) {
+			fromOrTo = getArchitecturalElementFromOrTo(elementToSearch, childElement);
+			if(fromOrTo != null){
+				break;
+			}
+		}
+		return fromOrTo;
+		
 	}
 
 	/**
