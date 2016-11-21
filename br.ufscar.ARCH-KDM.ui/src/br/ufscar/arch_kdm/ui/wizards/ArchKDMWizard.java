@@ -12,7 +12,7 @@ import br.ufscar.arch_kdm.ui.wizardsPage.Page02SelectFileWithDrift;
 import br.ufscar.arch_kdm.ui.wizardsPage.Page03MapArchitecture;
 import br.ufscar.arch_kdm.ui.wizardsPage.Page04ArchitecturalCompilanceChecking;
 import br.ufscar.arch_kdm.ui.wizardsPage.Page05ViewDrifts;
-import br.ufscar.arch_kdm.ui.wizardsPage.Page05ViewDriftsFail;
+import br.ufscar.arch_kdm.ui.wizardsPage.Page05ViewLog;
 
 public class ArchKDMWizard extends Wizard {
 
@@ -22,7 +22,7 @@ public class ArchKDMWizard extends Wizard {
 	private Page04ArchitecturalCompilanceChecking page4 = new Page04ArchitecturalCompilanceChecking();
 	private Page05ViewDrifts page5 = new Page05ViewDrifts();
 
-	private Page05ViewDriftsFail page5_1 = new Page05ViewDriftsFail();
+	private Page05ViewLog page5_1 = new Page05ViewLog();
 
 
 	private Segment segmentPlannedArchitecture = null;

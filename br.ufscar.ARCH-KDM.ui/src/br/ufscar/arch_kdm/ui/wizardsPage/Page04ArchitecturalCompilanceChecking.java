@@ -136,7 +136,7 @@ public class Page04ArchitecturalCompilanceChecking extends WizardPage {
 		if(isACCComplete()){
 			return getWizard().getPage("page05");
 		}else{
-			((Page05ViewDriftsFail) getWizard().getPage("page05_1")).setLog(accLog);
+			((Page05ViewLog) getWizard().getPage("page05_1")).setLog(accLog);
 			return getWizard().getPage("page05_1");
 		}
 	}

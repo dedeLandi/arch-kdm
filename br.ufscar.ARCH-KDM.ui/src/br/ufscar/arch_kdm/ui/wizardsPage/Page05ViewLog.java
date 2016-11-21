@@ -13,15 +13,15 @@ import org.eclipse.swt.widgets.Composite;
  * @author Landi
  *
  */
-public class Page05ViewDriftsFail extends WizardPage {
+public class Page05ViewLog extends WizardPage {
 
 	/**
 	 * Create the wizard.
 	 */
-	public Page05ViewDriftsFail() {
+	public Page05ViewLog() {
 		super("page05_1");
-		setTitle("Wizard Page title");
-		setDescription("Wizard Page description");
+		setTitle("Architectural Compilance Checking Wizard");
+		setDescription("Fail log of the ACC");
 	}
 
 	/**
@@ -40,6 +40,15 @@ public class Page05ViewDriftsFail extends WizardPage {
 	@Override
 	public IWizardPage getNextPage() {
 		return null;
+	}
+
+	/**
+	 * @author Landi
+	 * @param log
+	 */
+	public void setLog(StringBuilder log) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
