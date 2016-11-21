@@ -7,10 +7,8 @@ import org.eclipse.gmt.modisco.omg.kdm.code.AbstractCodeElement;
 import org.eclipse.gmt.modisco.omg.kdm.code.CodeModel;
 import org.eclipse.gmt.modisco.omg.kdm.code.Package;
 import org.eclipse.gmt.modisco.omg.kdm.core.KDMEntity;
-import org.eclipse.gmt.modisco.omg.kdm.kdm.KDMModel;
 import org.eclipse.gmt.modisco.omg.kdm.structure.AbstractStructureElement;
 import org.eclipse.gmt.modisco.omg.kdm.structure.StructureModel;
-import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -31,8 +29,8 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import br.ufscar.arch_kdm.core.mapping.MapArchitecture;
 import br.ufscar.arch_kdm.core.util.GenericClean;
 import br.ufscar.arch_kdm.core.util.GenericMethods;
-import br.ufscar.arch_kdm.ui.dialogs.SelectionModelDialog;
 import br.ufscar.arch_kdm.ui.util.IconsType;
+import br.ufscar.arch_kdm.ui.util.InterfaceGenericMethods;
 import br.ufscar.arch_kdm.ui.wizards.ArchKDMWizard;
 
 public class Page03MapArchitecture extends WizardPage {
@@ -358,11 +356,11 @@ public class Page03MapArchitecture extends WizardPage {
 				if(allStructure.get(key).size() == 1){
 					plannedArchitecture = allStructure.get(key).get(0); 
 				}else{
-					plannedArchitecture = (StructureModel) dialogWhatModelUse(allStructure.get(key), textInterface);
+					plannedArchitecture = (StructureModel) InterfaceGenericMethods.dialogWhatModelUse(allStructure.get(key), textInterface, null);
 				}
 			}
 		}else{
-			plannedArchitecture = (StructureModel) dialogWhatModelUse(allStructure, textInterface);
+			plannedArchitecture = (StructureModel) InterfaceGenericMethods.dialogWhatModelUse(allStructure, textInterface, null);
 		}
 		completeMap = EcoreUtil.copy(plannedArchitecture);
 
@@ -379,17 +377,6 @@ public class Page03MapArchitecture extends WizardPage {
 		}
 
 
-	}
-
-	private <T> KDMModel dialogWhatModelUse(T models, String textInterface) {
-		SelectionModelDialog.setTextSelection(textInterface);
-		SelectionModelDialog dialog = new SelectionModelDialog(null);
-		dialog.fillTreeOptions(models);
-		// get the new values from the dialog
-		if (dialog.open() == Window.OK) {
-			return dialog.getSelectedModel();
-		}
-		return null;
 	}
 
 	private void fillPlannedArchitecture(TreeItem treeItemParent, AbstractStructureElement parentElement) {
@@ -420,11 +407,11 @@ public class Page03MapArchitecture extends WizardPage {
 				if(allCode.get(key).size() == 1){
 					((ArchKDMWizard)this.getWizard()).setCodeActualArchitecture(allCode.get(key).get(0)); 
 				}else{
-					((ArchKDMWizard)this.getWizard()).setCodeActualArchitecture((CodeModel) dialogWhatModelUse(allCode.get(key), textInterface));
+					((ArchKDMWizard)this.getWizard()).setCodeActualArchitecture((CodeModel) InterfaceGenericMethods.dialogWhatModelUse(allCode.get(key), textInterface, null));
 				}
 			}
 		}else{
-			((ArchKDMWizard)this.getWizard()).setCodeActualArchitecture((CodeModel) dialogWhatModelUse(allCode, textInterface));
+			((ArchKDMWizard)this.getWizard()).setCodeActualArchitecture((CodeModel) InterfaceGenericMethods.dialogWhatModelUse(allCode, textInterface, null));
 		}
 
 		for (AbstractCodeElement abstractCodeElement : ((ArchKDMWizard)this.getWizard()).getCodeActualArchitecture().getCodeElement()) {
