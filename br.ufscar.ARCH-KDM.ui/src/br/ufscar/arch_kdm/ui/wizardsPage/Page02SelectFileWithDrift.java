@@ -57,7 +57,9 @@ public class Page02SelectFileWithDrift extends WizardPage {
 		tPathFilePlanned = new Text(container, SWT.BORDER);
 		tPathFilePlanned.setText("C:\\Java\\workspaceMestradoMars64\\arch-kdm\\br.ufscar.ARCH-KDM.ui\\src\\br\\ufscar\\arch_kdm\\ui\\tests\\archPlan.xmi");
 		tPathFilePlanned.setEditable(false);
-		tPathFilePlanned.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		GridData gd_tPathFilePlanned = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
+		gd_tPathFilePlanned.widthHint = 100;
+		tPathFilePlanned.setLayoutData(gd_tPathFilePlanned);
 
 		Button bSearchPlanned = new Button(container, SWT.NONE);
 		bSearchPlanned.addMouseListener(new MouseAdapter() {
@@ -90,7 +92,9 @@ public class Page02SelectFileWithDrift extends WizardPage {
 		tPathFileActual = new Text(container, SWT.BORDER);
 		tPathFileActual.setText("C:\\Java\\workspaceMestradoMars64\\arch-kdm\\br.ufscar.ARCH-KDM.ui\\src\\br\\ufscar\\arch_kdm\\ui\\tests\\SystemExampleMVC-SimplesComDesvios_kdm.xmi");
 		tPathFileActual.setEditable(false);
-		tPathFileActual.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		GridData gd_tPathFileActual = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
+		gd_tPathFileActual.widthHint = 100;
+		tPathFileActual.setLayoutData(gd_tPathFileActual);
 
 		Button bSearchActual = new Button(container, SWT.NONE);
 		bSearchActual.addMouseListener(new MouseAdapter() {
