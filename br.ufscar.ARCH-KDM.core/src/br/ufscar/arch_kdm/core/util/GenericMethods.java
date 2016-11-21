@@ -45,8 +45,6 @@ public class GenericMethods {
 
 		AggregatedRelationship aggregatedRelationship = from.createAggregation(to);;
 		aggregatedRelationship.setDensity(relations.size());
-//		aggregatedRelationship.setFrom(from);
-//		aggregatedRelationship.setTo(to);
 		aggregatedRelationship.getRelation().addAll(relations);
 
 		from.getAggregated().add(aggregatedRelationship);
@@ -108,7 +106,9 @@ public class GenericMethods {
 	 */
 	public static StructureModel getStructureArchitecture(String name, Segment segment) {
 		KDMValidateFilter<?, ?> filter = KDMValidateFilterJavaFactory.eINSTANCE.createValidateFilterNameOfKDMFramework(name);
-		Map<String, List<StructureModel>> allStructureModelActualArchitecture = KDMModelReaderJavaFactory.eINSTANCE.createKDMStructureModelReaderWithFilter(filter).getAllFromSegment(segment);
+		Map<String, List<StructureModel>> allStructureModelActualArchitecture = KDMModelReaderJavaFactory.eINSTANCE.
+				createKDMStructureModelReaderWithFilter(filter).getAllFromSegment(segment);
+		
 		if(allStructureModelActualArchitecture.keySet().size() == 1){
 			for (String key : allStructureModelActualArchitecture.keySet()) {
 				if(allStructureModelActualArchitecture.get(key).size() == 1){
@@ -268,9 +268,6 @@ public class GenericMethods {
 	private static AbstractStructureElement getOriginalStructureElement(AbstractStructureElement elementToSearch, AbstractStructureElement originalElement) {
 		String pathElementToSearch = getPathFromStructureElement(elementToSearch);
 		String pathOriginalElement = getPathFromStructureElement(originalElement);
-		System.out.println(pathElementToSearch);
-		System.out.println(pathOriginalElement);
-		System.out.println();
 		if(pathOriginalElement == null){
 			return null;
 		}
