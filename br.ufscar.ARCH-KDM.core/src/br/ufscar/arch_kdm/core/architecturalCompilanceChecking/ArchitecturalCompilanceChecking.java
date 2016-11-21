@@ -34,7 +34,10 @@ public class ArchitecturalCompilanceChecking {
 	private CodeModel codeActualArchitecture = null;
 	
 	private IProgressMonitor monitorProgress;
+	
 	private int monitorProgressPercent = 0;
+	
+	private static StringBuilder messageLog = new StringBuilder();
 	
 
 	/**
@@ -43,13 +46,17 @@ public class ArchitecturalCompilanceChecking {
 	 * @param actualArchitectureMapped
 	 * @param codeActualArchitecture
 	 * @param monitorProgress
+	 * @param namePlannedStructure 
+	 * @param nameActualStructure 
 	 */
-	public ArchitecturalCompilanceChecking(Segment plannedArchitecture, Segment actualArchitectureMapped, CodeModel codeActualArchitecture, IProgressMonitor monitorProgress) {
-		this.structurePlannedArchitecture = GenericMethods.getStructureArchitecture("PlannedArchitecture", plannedArchitecture);
-		this.structureActualArchitecture = GenericMethods.getStructureArchitecture("CompleteMap", actualArchitectureMapped);
+	public ArchitecturalCompilanceChecking(Segment plannedArchitecture, Segment actualArchitectureMapped, CodeModel codeActualArchitecture, 
+			IProgressMonitor monitorProgress, String namePlannedStructure, String nameActualStructure) {
+		this.structurePlannedArchitecture = GenericMethods.getStructureArchitecture(namePlannedStructure, plannedArchitecture);
+		this.structureActualArchitecture = GenericMethods.getStructureArchitecture(nameActualStructure, actualArchitectureMapped);
 		this.codeActualArchitecture = codeActualArchitecture;
 		
 		this.monitorProgress = monitorProgress;
+		
 	}
 	
 	/**
@@ -57,7 +64,7 @@ public class ArchitecturalCompilanceChecking {
 	 * @return
 	 * @throws InterruptedException 
 	 */
-	public StructureModel executeAcc() throws InterruptedException {
+	public StructureModel executeAcc(){
 		
 		updateMonitor("Preparing the XMI to make the Architectural Compilance Checking...");
 		structureDrifts = this.prepareAcc();
@@ -68,41 +75,21 @@ public class ArchitecturalCompilanceChecking {
 		return structureDrifts;
 	}
 
-	private void updateMonitor(String text) throws InterruptedException {
-		monitorProgress.subTask(text);
-		Thread.sleep(500);
-		monitorProgressPercent = monitorProgressPercent +10;
-		monitorProgress.worked(monitorProgressPercent);
-	}
-
 	/**
 	 * @author Landi
 	 * @return
 	 * @throws InterruptedException 
 	 */
-	private StructureModel prepareAcc() throws InterruptedException {
+	private StructureModel prepareAcc(){
 		updateMonitor("Creating container...");
-//		structureDrifts = StructureFactory.eINSTANCE.createStructureModel();
 		structureDrifts = EcoreUtil.copy(this.structurePlannedArchitecture);
 		structureDrifts.setName("violations");
 		
-//		updateMonitor("Copying the structural elements...");
-//		Collection<AbstractStructureElement> elementsToCopy = this.structurePlannedArchitecture.getStructureElement();
-//		Collection<AbstractStructureElement> copyOfAllStructureElements = EcoreUtil.copyAll(elementsToCopy);
-//		if(copyOfAllStructureElements == null){
-//			monitorProgress.subTask("Fail to copy elements from the actual architecture. Please, choose other XMI file.");
-//			Thread.sleep(1500);
-//			return null;
-//		}
-//		structureDrifts.getStructureElement().addAll(copyOfAllStructureElements);
-
 		updateMonitor("Cleaning wrong aggregated relationships...");
 		structureDrifts = GenericClean.cleanAggregateds(structureDrifts);
 		
-		
 		updateMonitor("Updating the mapping of the architecture...");
 		structureDrifts = GenericCopy.copyImplementation(structureDrifts, structureActualArchitecture, codeActualArchitecture);
-
 		structureDrifts = new MapArchitecture(structureDrifts).mapCompleteArchitecture();
 		
 		return structureDrifts;
@@ -113,13 +100,17 @@ public class ArchitecturalCompilanceChecking {
 	 * @param violations
 	 * @param plannedArchitecture
 	 * @return
+	 * @throws InterruptedException 
 	 */
-	private StructureModel acc(StructureModel violations, StructureModel plannedArchitecture) {
+	private StructureModel acc(StructureModel violations, StructureModel plannedArchitecture){
 		
+		updateMonitor("Recovering planned architecture...");
 		List<AggregatedRelationship> aggregatedsThatCanExists = GenericMethods.getAllAggregateds(plannedArchitecture);
 		
+		updateMonitor("Recovering actual architecture...");
 		List<AggregatedRelationship> aggregatedsActualArchitecture = GenericMethods.getAllAggregateds(violations);
 		
+		updateMonitor("Executing the ACC...");
 		for (AggregatedRelationship aggregatedThatCanExist : aggregatedsThatCanExists) {
 			KDMEntity from = aggregatedThatCanExist.getFrom();
 			KDMEntity to = aggregatedThatCanExist.getTo();
@@ -165,4 +156,39 @@ public class ArchitecturalCompilanceChecking {
 		}
 	}
 	
+	/**
+	 * @author Landi
+	 * @throws InterruptedException 
+	 */
+	public static void appendMessageToLog(String message){
+		messageLog.append("\n");
+		messageLog.append(message);
+		messageLog.append("\n");
+	}
+	
+	/**
+	 * @author Landi
+	 * @param text
+	 * @throws InterruptedException
+	 */
+	private void updateMonitor(String text) {
+		monitorProgress.subTask(text);
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		monitorProgressPercent = monitorProgressPercent +10;
+		monitorProgress.worked(monitorProgressPercent);
+		appendMessageToLog(text);
+	}
+	
+	
+	/**
+	 * @return the messageLog
+	 */
+	public StringBuilder getMessageLog() {
+		return messageLog;
+	}
 }
