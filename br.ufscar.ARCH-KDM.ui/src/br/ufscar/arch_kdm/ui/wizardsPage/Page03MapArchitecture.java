@@ -61,7 +61,7 @@ public class Page03MapArchitecture extends WizardPage {
 	 * @param parent
 	 */
 	public void createControl(Composite parent) {
-		Composite container = new Composite(parent, SWT.NULL);
+		Composite container = new Composite(parent, SWT.NONE);
 
 		setControl(container);
 		container.setLayout(new GridLayout(2, true));
@@ -78,11 +78,13 @@ public class Page03MapArchitecture extends WizardPage {
 
 		treeArchitecturalElements = new Tree(container, SWT.BORDER);
 		GridData gd_treeArchitecturalElements = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
+		gd_treeArchitecturalElements.heightHint = 100;
 		gd_treeArchitecturalElements.minimumHeight = 100;
 		treeArchitecturalElements.setLayoutData(gd_treeArchitecturalElements);
 
 		treeCodeElements = new Tree(container, SWT.BORDER);
 		GridData gd_treeCodeElements = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
+		gd_treeCodeElements.heightHint = 100;
 		gd_treeCodeElements.minimumHeight = 100;
 		treeCodeElements.setLayoutData(gd_treeCodeElements);
 
@@ -117,6 +119,7 @@ public class Page03MapArchitecture extends WizardPage {
 
 		treeElementsMapped = new Tree(container, SWT.BORDER);
 		GridData gd_treeElementsMapped = new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1);
+		gd_treeElementsMapped.heightHint = 100;
 		gd_treeElementsMapped.minimumHeight = 90;
 		treeElementsMapped.setLayoutData(gd_treeElementsMapped);
 
