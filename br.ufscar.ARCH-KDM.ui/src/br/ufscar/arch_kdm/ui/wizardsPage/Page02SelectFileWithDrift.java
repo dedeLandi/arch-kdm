@@ -207,6 +207,7 @@ public class Page02SelectFileWithDrift extends WizardPage {
 	public IWizardPage getNextPage() {
 		executeWizardPageFinalAction();
 		if(isMapped()){
+			((Page04ArchitecturalCompilanceChecking) getWizard().getPage("page04")).setPreviousPage("page02");
 			return getWizard().getPage("page04");
 		}else{
 			((Page03MapArchitecture) getWizard().getPage("page03")).fillPlannedArchitecture();
