@@ -228,15 +228,16 @@ public class GenericMethods {
 	 */
 	public static String getPathFromCodeElement(KDMEntity elementToSearch) {
 		String path = null;
+		boolean withHashCode = false;
 
 		if(elementToSearch instanceof Package){
-			path = KDMRecoverCodeHierarchyJavaFactory.eINSTANCE.createRecoverCodeHierarchyComplete().getHierarchyOf((Package)elementToSearch);
+			path = KDMRecoverCodeHierarchyJavaFactory.eINSTANCE.createRecoverCodeHierarchyComplete(withHashCode).getHierarchyOf((Package)elementToSearch);
 		}else if (elementToSearch instanceof ClassUnit) {
-			path = KDMRecoverCodeHierarchyJavaFactory.eINSTANCE.createRecoverCodeHierarchyComplete().getHierarchyOf((ClassUnit)elementToSearch);
+			path = KDMRecoverCodeHierarchyJavaFactory.eINSTANCE.createRecoverCodeHierarchyComplete(withHashCode).getHierarchyOf((ClassUnit)elementToSearch);
 		}else if (elementToSearch instanceof InterfaceUnit) {
-			path = KDMRecoverCodeHierarchyJavaFactory.eINSTANCE.createRecoverCodeHierarchyComplete().getHierarchyOf((InterfaceUnit)elementToSearch);
+			path = KDMRecoverCodeHierarchyJavaFactory.eINSTANCE.createRecoverCodeHierarchyComplete(withHashCode).getHierarchyOf((InterfaceUnit)elementToSearch);
 		}else if (elementToSearch instanceof EnumeratedType) {
-			path = KDMRecoverCodeHierarchyJavaFactory.eINSTANCE.createRecoverCodeHierarchyComplete().getHierarchyOf((EnumeratedType)elementToSearch);
+			path = KDMRecoverCodeHierarchyJavaFactory.eINSTANCE.createRecoverCodeHierarchyComplete(withHashCode).getHierarchyOf((EnumeratedType)elementToSearch);
 		}
 		
 		return path;
