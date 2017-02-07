@@ -4,6 +4,10 @@
  */
 package br.ufscar.arch_kdm.core.util;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -24,6 +28,7 @@ import org.eclipse.gmt.modisco.omg.kdm.kdm.Segment;
 import org.eclipse.gmt.modisco.omg.kdm.structure.AbstractStructureElement;
 import org.eclipse.gmt.modisco.omg.kdm.structure.StructureModel;
 
+import br.ufscar.kdm_manager.core.complements.complementRelationship.factory.KDMComplementsRelationshipFactory;
 import br.ufscar.kdm_manager.core.exceptions.KDMFileException;
 import br.ufscar.kdm_manager.core.filters.validateFilter.factory.KDMValidateFilterJavaFactory;
 import br.ufscar.kdm_manager.core.filters.validateFilter.interfaces.KDMValidateFilter;
@@ -48,7 +53,7 @@ public class GenericMethods {
 		aggregatedRelationship.getRelation().addAll(relations);
 
 		from.getAggregated().add(aggregatedRelationship);
-		
+
 	}
 
 	public static void updateAggreagatedWith(AggregatedRelationship aggregatedRelationship, List<KDMRelationship> relations) {
@@ -108,7 +113,7 @@ public class GenericMethods {
 		KDMValidateFilter<?, ?> filter = KDMValidateFilterJavaFactory.eINSTANCE.createValidateFilterNameOfKDMFramework(name);
 		Map<String, List<StructureModel>> allStructureModelActualArchitecture = KDMModelReaderJavaFactory.eINSTANCE.
 				createKDMStructureModelReaderWithFilter(filter).getAllFromSegment(segment);
-		
+
 		if(allStructureModelActualArchitecture.keySet().size() == 1){
 			for (String key : allStructureModelActualArchitecture.keySet()) {
 				if(allStructureModelActualArchitecture.get(key).size() == 1){
@@ -220,7 +225,7 @@ public class GenericMethods {
 		return list;
 	}
 
-	
+
 	/**
 	 * @author Landi
 	 * @param elementToSearch
@@ -239,7 +244,7 @@ public class GenericMethods {
 		}else if (elementToSearch instanceof EnumeratedType) {
 			path = KDMRecoverCodeHierarchyJavaFactory.eINSTANCE.createRecoverCodeHierarchyComplete(withHashCode).getHierarchyOf((EnumeratedType)elementToSearch);
 		}
-		
+
 		return path;
 	}
 
@@ -276,14 +281,14 @@ public class GenericMethods {
 			return originalElement;			
 		}
 		AbstractStructureElement original = null;
-		
+
 		for (AbstractStructureElement child : originalElement.getStructureElement()) {
 			original = getOriginalStructureElement(elementToSearch, child);
 			if (original != null) {
 				break;
 			}
 		}
-		
+
 		return original;
 	}
 
@@ -295,8 +300,8 @@ public class GenericMethods {
 	public static String getPathFromStructureElement(AbstractStructureElement elementToSearch) {
 		String path = null;
 
-			path = KDMRecoverStructureHierarchyJavaFactory.eINSTANCE.createRecoverStructureHierarchyModel().getHierarchyOf(elementToSearch);
-		
+		path = KDMRecoverStructureHierarchyJavaFactory.eINSTANCE.createRecoverStructureHierarchyModel().getHierarchyOf(elementToSearch);
+
 		return path;
 	}
 
@@ -319,25 +324,25 @@ public class GenericMethods {
 	 */
 	public static List<AggregatedRelationship> getSpecificAggregated(KDMEntity from, KDMEntity to,
 			List<AggregatedRelationship> aggregatedsActualArchitecture) {
-		
+
 		List<AggregatedRelationship> aggregatedsFound = new ArrayList<AggregatedRelationship>();
-		
+
 		for (AggregatedRelationship aggregatedRelationship : aggregatedsActualArchitecture) {
-			
+
 			if(getPathFromStructureElement((AbstractStructureElement) aggregatedRelationship.getFrom()).
 					equalsIgnoreCase(getPathFromStructureElement((AbstractStructureElement) from)) 
-					
+
 					&& getPathFromStructureElement((AbstractStructureElement) aggregatedRelationship.getTo()).
 					equalsIgnoreCase(getPathFromStructureElement((AbstractStructureElement) to))){
 				aggregatedsFound.add(aggregatedRelationship);
 			}
-			
+
 		}
-		
+
 		return aggregatedsFound;
 	}
 
-	
+
 	/**
 	 * @author Landi
 	 * @param structureModel 
@@ -348,7 +353,7 @@ public class GenericMethods {
 		for (AbstractStructureElement abstractStructureElement : structureModel.getStructureElement()) {
 
 			removeAggregatedRelationshipWithDensityEquals(abstractStructureElement, density);
-			
+
 		}
 	}
 
@@ -359,7 +364,7 @@ public class GenericMethods {
 	 */
 	private static void removeAggregatedRelationshipWithDensityEquals(AbstractStructureElement abstractStructureElement,
 			int density) {
-		
+
 		for (Iterator<AggregatedRelationship> iterator = abstractStructureElement.getInAggregated().iterator(); iterator.hasNext();) {
 			AggregatedRelationship aggregatedRelationship = (AggregatedRelationship) iterator.next();
 			if(aggregatedRelationship.getDensity() == density){
@@ -378,7 +383,7 @@ public class GenericMethods {
 				iterator.remove();
 			}
 		}
-		
+
 		if(abstractStructureElement.getStructureElement().size() > 0){
 			for (AbstractStructureElement abstractStructureElementChild : abstractStructureElement.getStructureElement()) {
 				removeAggregatedRelationshipWithDensityEquals(abstractStructureElementChild, density);
@@ -394,17 +399,17 @@ public class GenericMethods {
 		for (AbstractStructureElement abstractStructureElement : structureModel.getStructureElement()) {
 
 			removeAggregatedRelationshipToFromEquals(abstractStructureElement);
-			
+
 		}
 	}
-	
+
 	/**
 	 * @author Landi
 	 * @param abstractStructureElement
 	 * @param density
 	 */
 	private static void removeAggregatedRelationshipToFromEquals(AbstractStructureElement abstractStructureElement) {
-		
+
 		for (Iterator<AggregatedRelationship> iterator = abstractStructureElement.getInAggregated().iterator(); iterator.hasNext();) {
 			AggregatedRelationship aggregatedRelationship = (AggregatedRelationship) iterator.next();
 			if(aggregatedRelationship.getFrom() == null || aggregatedRelationship.getTo() == null || 
@@ -435,5 +440,42 @@ public class GenericMethods {
 			}
 		}
 	}
-	
+
+	/**
+	 * @author Landi
+	 * @param text
+	 */
+	public static String updateInstanceToHasType(String kdmPath) {
+
+		Segment segmentOriginal = GenericMethods.readSegmentFromPath(kdmPath);
+
+		Segment segmentCompleto = KDMComplementsRelationshipFactory.eINSTANCE.createHasTypeComplements().complementsRelationOf(segmentOriginal);
+
+		GenericMethods.serializeSegment(kdmPath.replace(".xmi", "-hastype.xmi"), segmentCompleto);
+
+		return kdmPath.replace(".xmi", "-hastype.xmi");
+	}
+
+	/**
+	 * @author Landi
+	 */
+	public static List<String> readFile(String path) {
+		try{
+			List<String> file = new ArrayList<>();
+			BufferedReader input = new BufferedReader(new FileReader(path));
+			// for each line
+			for(String line = input.readLine(); line != null; line = input.readLine()) {
+				file.add(line);
+			}
+			input.close();
+			return file;
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return null;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 }
