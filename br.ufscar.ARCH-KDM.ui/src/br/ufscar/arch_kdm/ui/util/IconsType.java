@@ -76,6 +76,13 @@ public enum IconsType implements IIconsType{
 		}
 
 	},
+	RECOVERY{
+		@Override
+		public Image getImage() {
+			return new Image(Display.getDefault(), getClass().getResourceAsStream("/icons/recovery.png"));
+		}
+		
+	},
 	SEARCH{
 		@Override
 		public Image getImage() {
