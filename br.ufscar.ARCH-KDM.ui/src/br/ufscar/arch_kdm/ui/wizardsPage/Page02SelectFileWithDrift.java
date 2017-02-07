@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import br.ufscar.arch_kdm.core.util.GenericMethods;
 import br.ufscar.arch_kdm.ui.wizards.ArchKDMWizard;
 
 public class Page02SelectFileWithDrift extends WizardPage {
@@ -26,6 +27,7 @@ public class Page02SelectFileWithDrift extends WizardPage {
 	private Combo cbTypeActualArchitecture;
 	private static final String ALREADY_MAPPED = "Architectural Elements Already Mapped";
 	private static final String ORIGINAL_MAP = "Original (From Discover)";
+	private Button ckHasType;
 
 	/**
 	 * Create the wizard.
@@ -104,6 +106,10 @@ public class Page02SelectFileWithDrift extends WizardPage {
 			}
 		});
 		bSearchActual.setText("Search");
+		
+		ckHasType = new Button(container, SWT.CHECK);
+		ckHasType.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 3, 1));
+		ckHasType.setText("Complete Actual Architecture With HasType");
 
 		fillCbType();
 	}
@@ -218,6 +224,11 @@ public class Page02SelectFileWithDrift extends WizardPage {
 
 	private void executeWizardPageFinalAction() {
 		ArchKDMWizard archKDMWizard = (ArchKDMWizard) this.getWizard();
+		
+		if(ckHasType.getSelection()){
+			String savedPath = GenericMethods.updateInstanceToHasType(this.tPathFileActual.getText());
+			this.tPathFileActual.setText(savedPath);
+		}
 		
 		archKDMWizard.setPathActualArchitecture(this.tPathFileActual.getText());
 		archKDMWizard.setPathPlannedArchitecture(this.tPathFilePlanned.getText());
