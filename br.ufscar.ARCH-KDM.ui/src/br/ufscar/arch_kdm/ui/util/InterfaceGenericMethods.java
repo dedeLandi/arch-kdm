@@ -8,6 +8,7 @@ import org.eclipse.gmt.modisco.omg.kdm.kdm.KDMModel;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 
+import br.ufscar.arch_kdm.ui.dialogs.ConfigureClusteringAlgoDialog;
 import br.ufscar.arch_kdm.ui.dialogs.SelectionModelDialog;
 
 /**
@@ -31,6 +32,20 @@ public class InterfaceGenericMethods {
 		// get the new values from the dialog
 		if (dialog.open() == Window.OK) {
 			return dialog.getSelectedModel();
+		}
+		return null;
+	}
+	
+	/**
+	 * @author Landi
+	 */
+	public static String dialogWhatAlgoConfiguration(String textInterface, Shell shell) {
+		ConfigureClusteringAlgoDialog.setTextSelection(textInterface);
+		ConfigureClusteringAlgoDialog dialog = new ConfigureClusteringAlgoDialog(shell);
+		// get the new values from the dialog
+		if (dialog.open() == Window.OK) {
+			return "-E " + dialog.getEpsilon() +
+				   " -M " + dialog.getMinCluster();
 		}
 		return null;
 	}
