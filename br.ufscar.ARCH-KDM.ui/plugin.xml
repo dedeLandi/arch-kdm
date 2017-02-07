@@ -4,32 +4,34 @@
    <extension
          point="org.eclipse.ui.menus">
       <menuContribution
+            allPopups="false"
             locationURI="menu:org.eclipse.ui.main.menu?after=additions">
          <menu
                id="br.ufscar.archref_kdm.ui.menus.ARFmenu"
                label="Architectural Reconciliation">
             <command
-                  commandId="br.ufscar.ARCH_KDM.actions.commands.ACCcommand"
-                  id="br.ufscar.ARCH_KDM.actions.menus.ACCcommand"
-                  label="Architectural Compilance Checking Wizard">
+                  commandId="br.ufscar.ARCH-KDM.ui.command1"
+                  icon="icons/ArchKDM-LOGO.png"
+                  id="br.ufscar.ARCH-KDM.ui.menu.command1"
+                  label="Architectural Conformance Cheking Wizard">
             </command>
          </menu>
       </menuContribution>
    </extension>
    <extension
-         point="org.eclipse.ui.handlers">
-      <handler
-            class="br.ufscar.arch_kdm.ui.handlers.ArchitecturalCompilanceCheckingHandler"
-            commandId="br.ufscar.ARCH_KDM.actions.commands.ACCcommand">
-      </handler>
-   </extension>
-   <extension
          point="org.eclipse.ui.commands">
       <command
             categoryId="br.ufscar.archref_kdm.ui.commands.ARFcategory"
-            id="br.ufscar.ARCH_KDM.actions.commands.ACCcommand"
-            name="Architectural Compilance Checking Command">
+            id="br.ufscar.ARCH-KDM.ui.command1"
+            name="Architectural Conformance Cheking Command">
       </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="br.ufscar.arch_kdm.ui.handlers.ArchitecturalCompilanceCheckingHandler"
+            commandId="br.ufscar.ARCH-KDM.ui.command1">
+      </handler>
    </extension>
 
 </plugin>
