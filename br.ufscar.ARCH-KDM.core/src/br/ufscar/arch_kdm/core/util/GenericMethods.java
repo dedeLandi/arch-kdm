@@ -14,6 +14,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmt.modisco.omg.kdm.code.AbstractCodeElement;
 import org.eclipse.gmt.modisco.omg.kdm.code.ClassUnit;
 import org.eclipse.gmt.modisco.omg.kdm.code.CodeItem;
@@ -22,12 +24,12 @@ import org.eclipse.gmt.modisco.omg.kdm.code.EnumeratedType;
 import org.eclipse.gmt.modisco.omg.kdm.code.InterfaceUnit;
 import org.eclipse.gmt.modisco.omg.kdm.code.Package;
 import org.eclipse.gmt.modisco.omg.kdm.core.AggregatedRelationship;
+import org.eclipse.gmt.modisco.omg.kdm.core.CoreFactory;
 import org.eclipse.gmt.modisco.omg.kdm.core.KDMEntity;
 import org.eclipse.gmt.modisco.omg.kdm.core.KDMRelationship;
 import org.eclipse.gmt.modisco.omg.kdm.kdm.Segment;
 import org.eclipse.gmt.modisco.omg.kdm.structure.AbstractStructureElement;
 import org.eclipse.gmt.modisco.omg.kdm.structure.StructureModel;
-
 import br.ufscar.kdm_manager.core.complements.complementRelationship.factory.KDMComplementsRelationshipFactory;
 import br.ufscar.kdm_manager.core.exceptions.KDMFileException;
 import br.ufscar.kdm_manager.core.filters.validateFilter.factory.KDMValidateFilterJavaFactory;
@@ -439,6 +441,76 @@ public class GenericMethods {
 				removeAggregatedRelationshipToFromEquals(abstractStructureElementChild);
 			}
 		}
+	}
+	
+	/**
+	 * @author Gasparini
+	 * @param codeModel 
+	 * @param structureModel
+	 * Split an AggregatedRelationship into AggregatedRelationships, each containing only related KDMRelationships.
+	 */
+	//TODO Refactor and optimize this method
+	public static void splitAggregatedByRelatedRelationships(EList<AbstractStructureElement> eList) {
+		for (AbstractStructureElement abstractStructureElement: eList) {
+			ArrayList<AggregatedRelationship> groups = new ArrayList<AggregatedRelationship>();
+			for (AggregatedRelationship aggregatedRelationship: abstractStructureElement.getAggregated()) {				
+				for (KDMRelationship relation_1: aggregatedRelationship.getRelation()) {	
+					for (KDMRelationship relation_2: aggregatedRelationship.getRelation()) {
+						if (relation_1 != relation_2) {
+							if (isParent(relation_1.getTo(), relation_2.getTo())) {
+								AggregatedRelationship group = getRelationshipGroup(relation_1, groups);
+								group = (group != null)?group:getRelationshipGroup(relation_2, groups);
+								
+								if (group == null) {
+									group = CoreFactory.eINSTANCE.createAggregatedRelationship();
+									group.setFrom(aggregatedRelationship.getFrom());
+									group.setTo(aggregatedRelationship.getTo());
+									groups.add(group);
+								}
+								
+								if (!group.getRelation().contains(relation_1))
+									group.getRelation().add(relation_1);
+								if (!group.getRelation().contains(relation_2))
+									group.getRelation().add(relation_2);
+								group.setDensity(group.getRelation().size());
+							}
+						}
+					}
+				}
+			}
+			
+			abstractStructureElement.getAggregated().clear();
+			abstractStructureElement.getAggregated().addAll(groups);
+			
+			if (abstractStructureElement.getStructureElement().size() > 0)
+				splitAggregatedByRelatedRelationships(abstractStructureElement.getStructureElement());
+		}
+	}
+
+	private static AggregatedRelationship getRelationshipGroup(KDMRelationship relation_1, ArrayList<AggregatedRelationship> groups) {
+		for (AggregatedRelationship group: groups)
+			if (group.getRelation().contains(relation_1))
+				return group;
+		
+		return null;
+	}
+	
+//	private static boolean isRelated(KDMEntity originalCodeElement_1, KDMEntity originalCodeElement_2) {
+//		return isParent(originalCodeElement_1, originalCodeElement_2) || isParent(originalCodeElement_2, originalCodeElement_1);
+//	}
+	
+	private static boolean isParent(EObject originalObject_1, EObject originalObject_2) {
+		// TODO Auto-generated method stub
+		EObject object = originalObject_2;
+		
+		while (object != null) {
+			if (object == originalObject_1)
+				return true;
+			
+			object = object.eContainer();
+		};
+		
+		return false;
 	}
 
 	/**
