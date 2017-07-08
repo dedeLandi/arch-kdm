@@ -54,6 +54,13 @@ public class Violations {
 	}
 	
 	/**
+	 * @param possibleLoC the possibleLoC to set
+	 */
+	public void setPossibleLoC(String possibleLoC) {
+		this.possibleLoC = possibleLoC;
+	}
+	
+	/**
 	 * @return the packagePath
 	 */
 	public String getPackagePath() {

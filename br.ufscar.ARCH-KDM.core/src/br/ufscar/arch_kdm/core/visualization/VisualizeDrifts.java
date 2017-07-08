@@ -29,6 +29,8 @@ import br.ufscar.kdm_manager.core.filters.validateFilter.interfaces.KDMValidateF
 import br.ufscar.kdm_manager.core.readers.modelReader.factory.KDMModelReaderJavaFactory;
 import br.ufscar.kdm_manager.core.readers.structureReader.factory.KDMStructureReaderJavaFactory;
 import br.ufscar.kdm_manager.core.recovers.recoverCodeHierarchy.factory.KDMRecoverCodeHierarchyJavaFactory;
+import br.ufscar.kdm_manager.core.recovers.recoverRelationshipLoC.factory.KDMRecoverLoCRelationshipFactory;
+import br.ufscar.kdm_manager.core.recovers.recoverRelationshipLoC.interfaces.KDMRecoverGenericLoCRelationship;
 
 /**
  * @author André
@@ -95,7 +97,8 @@ public class VisualizeDrifts {
 
 				String action = relationship.eClass().getName();
 				Violations violation = new Violations(action, drift, relationship);
-
+				KDMRecoverGenericLoCRelationship<KDMRelationship> possibleLoC = KDMRecoverLoCRelationshipFactory.eINSTANCE.createRecoverLoCRelationship();
+				violation.setPossibleLoC(possibleLoC.getLoCPatternFromRelationship(relationship));
 				drift.addViolation(violation);
 			}
 
