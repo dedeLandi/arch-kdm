@@ -12,26 +12,23 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
-import br.ufscar.arch_kdm.core.visualization.VisualizeDrifts;
 import br.ufscar.arch_kdm.core.visualization.model.Drift;
 import br.ufscar.arch_kdm.core.visualization.model.Violations;
 import br.ufscar.arch_kdm.ui.util.IconsType;
-import br.ufscar.arch_kdm.ui.util.InterfaceGenericMethods;
 import br.ufscar.arch_kdm.ui.visualization.groupingTypes.GroupingAlgorithmTypes;
-import br.ufscar.arch_kdm.ui.wizards.ArchKDMWizard;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.widgets.Combo;
 
 /**
  * @author Landi

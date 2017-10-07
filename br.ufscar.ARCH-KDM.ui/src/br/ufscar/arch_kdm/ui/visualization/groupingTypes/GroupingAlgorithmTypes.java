@@ -6,7 +6,8 @@ package br.ufscar.arch_kdm.ui.visualization.groupingTypes;
 
 import java.util.List;
 
-import br.ufscar.arch_kdm.core.visualization.VisualizeDrifts;
+import br.ufscar.arch_kdm.core.visualization.IVisualizeDriftsAlgo;
+import br.ufscar.arch_kdm.core.visualization.VisualizeDriftsFactory;
 import br.ufscar.arch_kdm.core.visualization.groupingAlgorithms.IGroupingAlgorithmType;
 import br.ufscar.arch_kdm.core.visualization.model.Drift;
 import br.ufscar.arch_kdm.ui.util.InterfaceGenericMethods;
@@ -53,7 +54,7 @@ public enum GroupingAlgorithmTypes implements IGroupingAlgorithmType{
 			ArchKDMWizard wizardArchKDM = (ArchKDMWizard) wizard;
 			String KDMViolationsPath = wizardArchKDM.getPathActualArchitecture().replace(".xmi", "-violations.xmi");
 
-			VisualizeDrifts visualizeDrifts = new VisualizeDrifts();
+			IVisualizeDriftsAlgo visualizeDrifts = VisualizeDriftsFactory.INSTANCE.createVisualizeDriftsAlgoSimilarityMatrix();
 			visualizeDrifts.setModelViolatingPath(KDMViolationsPath);
 			visualizeDrifts.setAlgorithmOptions(optionsAlgo);
 

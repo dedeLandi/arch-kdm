@@ -2,7 +2,7 @@
  * @author André
  * 
  */
-package br.ufscar.arch_kdm.core.visualization;
+package br.ufscar.arch_kdm.core.visualization.impl;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -18,6 +18,7 @@ import org.eclipse.gmt.modisco.omg.kdm.kdm.Segment;
 import org.eclipse.gmt.modisco.omg.kdm.structure.StructureModel;
 
 import br.ufscar.arch_kdm.core.util.GenericMethods;
+import br.ufscar.arch_kdm.core.visualization.IVisualizeDriftsAlgo;
 import br.ufscar.arch_kdm.core.visualization.model.Drift;
 import br.ufscar.arch_kdm.core.visualization.model.Violations;
 import br.ufscar.kdm_manager.core.executionEngines.machineLearningEngine.clusteringWekaEngine.factory.MLClusteringWekaEngineFactory;
@@ -36,7 +37,7 @@ import br.ufscar.kdm_manager.core.recovers.recoverRelationshipLoC.interfaces.KDM
  * @author André
  *
  */
-public class VisualizeDrifts {
+public class VisualizeDriftsAlgoMatrixSimilarity implements IVisualizeDriftsAlgo {
 
 	private String kDMViolationsPath;
 	private String optionsAlgo;
@@ -46,26 +47,26 @@ public class VisualizeDrifts {
 	private List<String> outputWekaFile;
 	private List<KDMRelationship> allViolations;
 
-	/**
-	 * @author Landi
-	 * @param kDMViolationsPath
+	/* (non-Javadoc)
+	 * @see br.ufscar.arch_kdm.core.visualization.IVisualizeDrifts#setModelViolatingPath(java.lang.String)
 	 */
+	@Override
 	public void setModelViolatingPath(String kDMViolationsPath) {
 		this.kDMViolationsPath = kDMViolationsPath;
 	}
 
-	/**
-	 * @author Landi
-	 * @param optionsAlgo
+	/* (non-Javadoc)
+	 * @see br.ufscar.arch_kdm.core.visualization.IVisualizeDrifts#setAlgorithmOptions(java.lang.String)
 	 */
+	@Override
 	public void setAlgorithmOptions(String optionsAlgo) {
 		this.optionsAlgo = optionsAlgo;
 	}
 
-	/**
-	 * @author Landi
-	 * @return
+	/* (non-Javadoc)
+	 * @see br.ufscar.arch_kdm.core.visualization.IVisualizeDrifts#getDrifts()
 	 */
+	@Override
 	public List<Drift> getDrifts() {
 
 		generateSimilarityMatrix();
