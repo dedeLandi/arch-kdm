@@ -1,0 +1,419 @@
+module KDM2UML;
+create umlOutput : uml from kdmInput : kdm;
+
+-- Bruno César Gasparini --
+
+-- ### Helpers ### -- begin
+helper context kdm!Datatype def : isPrimitiveType() : Boolean =
+	if (self.oclIsUndefined() or (self.oclIsKindOf(kdm!PrimitiveType))) then
+		true
+	else
+		-- specific case for primitive objects
+		if ((self.name = 'String') or (self.name = 'Integer') 
+				or (self.name = 'Long') or (self.name = 'Short')
+				or (self.name = 'Float') or (self.name = 'Double')
+				or (self.name = 'Boolean') or (self.name = 'Number')) then
+			true
+		else
+			false
+		endif
+	endif;
+
+helper context kdm!Element def : getVisibility() : uml!VisibilityKind = 
+	if (self.oclIsTypeOf(kdm!MethodUnit)) then
+		self->getMethodVisibility()
+	else
+		if (self.oclIsTypeOf(kdm!Datatype)) then
+			self->getDatatypeVisibility()
+		else
+			#public
+		endif
+	endif;
+
+helper context kdm!DataElement def : getUpperCardinality() : Integer =
+	if (not self.size.oclIsUndefined()) then
+		self.size
+	else
+		if (not self.type.oclIsUndefined()) then
+			if (self.type.oclIsKindOf(kdm!ArrayType)) then
+				-1
+			else
+				if (self.type.oclIsTypeOf(kdm!TemplateType)) then
+					if (self.type->isCollection() or self.type->isMap()) then
+						-1
+					else
+						1
+					endif
+				else
+					1
+				endif
+		    endif
+		else
+			1
+		endif
+	endif;
+
+helper context kdm!DataElement def : getDataElementType() : kdm!Datatype =
+	if (self.type.oclIsTypeOf(kdm!TemplateType)) then
+		if (self.type->isCollection() or self.type->isMap()) then
+			self.type->getTemplateTypeBinding()
+		else
+			self.type
+		endif
+	else
+		if (self.type.oclIsTypeOf(kdm!ArrayType)) then
+			self.type.itemUnit.type
+		else
+			self.type
+		endif
+	endif;
+
+--helper context kdm!CodeItem def : getParent() : kdm!Package =
+--	if (self.refImmediateComposite().oclIsTypeOf(kdm!Package)) then
+--		self.refImmediateComposite()
+--	else
+--		if (self.refImmediateComposite().oclIsKindOf(kdm!CodeItem)) then
+--			self.refImmediateComposite()->getParent()
+--		else
+--			thisModule->findExternalPackage()
+--		endif
+--	endif;
+
+helper context kdm!CodeItem def : getParent() : kdm!Package =
+	if (self.refImmediateComposite().isViolation()) then
+		self.refImmediateComposite()
+	else
+		self.findEntityViolatedLayer()
+	endif;
+
+---- Helper to find out whether a given entity (argument) is descendant of the context object (self)
+--helper context kdm!KDMEntity def: isDescendantOf(entity: kdm!KDMEntity): Boolean =
+--	if self = entity then
+--		true
+--	else 
+--		if self.refImmediateComposite().oclIsTypeOf(kdm!CodeModel) then -- Stops the recursive search at the CodeModel. It is assumed that the model is the root on the family tree.
+--			false
+--		else
+--			self.refImmediateComposite().isDescendantOf(entity)
+--		endif
+--	endif;
+
+---- Helper to find out which violated layer the given context object (self) belongs to. If it doesn't belong to any, OciUndefined is returned. 
+--helper context kdm!KDMEntity def : findEntityViolatedLayer() : kdm!Layer =
+--	kdm!Layer.allInstances()
+--		->select(layer | 
+--			layer.getModelContainer().name = 'violations'
+--			and not (layer.inAggregated->isEmpty() and layer.outAggregated->isEmpty())
+--			and (
+--				layer.outAggregated->exists(
+--					aggregated | aggregated.relation->exists(
+--						relation | relation.from.isDescendantOf(self))) 
+--				or
+--				layer.inAggregated->exists(
+--					aggregated | aggregated.relation->exists(
+--						relation | relation.to.isDescendantOf(self)))
+--			) 
+--		)->first();
+
+--helper context kdm!KDMRelationship def : findRelationshipViolatedLayer() : kdm!Layer =
+--	kdm!Layer.allInstances()
+--		->select(layer | 
+--			layer.getModelContainer().name = 'violations'
+--			and not (layer.inAggregated->isEmpty() and layer.outAggregated->isEmpty())
+--			and (
+--				layer.outAggregated->exists(
+--					aggregated | aggregated.relation->exists(
+--						relation | relation = self)) 
+--				or
+--				layer.inAggregated->exists(
+--					aggregated | aggregated.relation->exists(
+--						relation | relation = self))
+--			) 
+--		)->first();
+
+--entrypoint rule test(){
+--	do {
+--		kdm!Creates.allInstances()->select(p | p = p)->first().findRelationshipViolatedLayer().debug('aa');
+--	}
+--}
+
+helper context kdm!Element def : isDescendantOf(element: kdm!Element): Boolean =
+	if self = element then
+		true
+	else 
+		if self.refImmediateComposite().oclIsTypeOf(kdm!CodeModel) then -- Stops the recursive search at the CodeModel. It is assumed that the model is the root on the family tree.
+			false
+		else
+			self.refImmediateComposite().isDescendantOf(element)
+		endif
+	endif;
+
+
+helper context kdm!KDMEntity def : findEntityViolatedLayer() : kdm!Layer =
+	kdm!Layer.allInstances()
+		->select(layer | 
+			layer.getModelContainer().name = 'violations'
+			and not (layer.inAggregated->isEmpty() and layer.outAggregated->isEmpty())
+			and (
+				layer.outAggregated->exists(
+					aggregated | aggregated.relation->exists(
+						relation | relation.from.isDescendantOf(self))) 
+				or
+				layer.inAggregated->exists(
+					aggregated | aggregated.relation->exists(
+						relation | relation.to.isDescendantOf(self)))
+			) 
+		)->first();
+
+helper context kdm!KDMRelationship def : findRelationshipViolatedLayer() : kdm!Layer =
+	kdm!Layer.allInstances()
+		->select(layer | 
+			layer.getModelContainer().name = 'violations'
+			and not (layer.inAggregated->isEmpty() and layer.outAggregated->isEmpty())
+			and (
+				layer.outAggregated->exists(
+					aggregated | aggregated.relation->exists(
+						relation | relation = self)) 
+				or
+				layer.inAggregated->exists(
+					aggregated | aggregated.relation->exists(
+						relation | relation = self))
+			) 
+		)->first();
+
+helper context kdm!Element def : getModelContainer() : kdm!CodeModel =
+	if (self.oclIsTypeOf(kdm!CodeModel) or self.oclIsTypeOf(kdm!StructureModel)) then
+		self
+	else 
+		self.refImmediateComposite().getModelContainer()
+	endif;
+
+helper context kdm!Element def : getClassContainer() : kdm!ClassUnit =
+	if (self.oclIsTypeOf(kdm!ClassUnit)) then
+		self
+	else 
+		self.refImmediateComposite().getClassContainer()
+	endif;
+
+helper context kdm!Element def : isViolation() : Boolean =
+	if self.oclIsKindOf(kdm!KDMEntity) then
+		not self.findEntityViolatedLayer().oclIsUndefined()
+	else 
+		if self.oclIsKindOf(kdm!KDMRelationship) then
+			not self.findRelationshipViolatedLayer().oclIsUndefined()
+		else false endif
+	endif;
+
+helper context OclAny def : getViolation() : OclAny =
+	thisModule.resolveTemp(self, 'tgt');
+
+helper context kdm!DataElement def : getLowerCardinality() : Integer =
+	let attribute : kdm!Attribute = self.attribute->select(e | e.tag = 'inheritance')->first() in
+		if (attribute.oclIsUndefined()) then
+			0
+		else
+			if (attribute.value = 'final') then
+				1
+			else
+				0
+			endif
+		endif;
+
+-- ### Helpers ### -- end
+
+-- StructureModel transformation
+rule StructureModelToModel {
+	from src :kdm!StructureModel (
+		src.name = 'violations'
+	)
+	to tgt :uml!Model (
+		name <- src.name,
+		packagedElement <- src.structureElement
+	)
+}
+
+-- Subsystem transformation
+rule SubsystemToPackage {
+	from src :kdm!Subsystem (
+		src.getModelContainer().name = 'violations'
+	)
+	to tgt :uml!Package (
+		name <- src.name,
+		packagedElement <- src.structureElement
+	)
+}
+
+-- Layer transformation
+rule LayerToPackage {
+	from src :kdm!Layer (
+		src.getModelContainer().name = 'violations'
+		and not (src.inAggregated->isEmpty() and src.outAggregated->isEmpty())
+	)
+	to tgt :uml!Package (
+		name <- src.name,
+		packagedElement <- src.structureElement
+	)
+}
+
+-- Package transformation
+rule ModuleToPackage {
+	from src :kdm!Package (src.isViolation())
+	to tgt :uml!Package (
+		name <- src.name,
+		visibility <- src->getVisibility()
+	)
+	do {
+		thisModule.resolveTemp(src->findEntityViolatedLayer(), 'tgt').packagedElement <- tgt;
+	}
+}
+
+-- Extends transformation
+rule ExtendsToGeneralization {
+	from src :kdm!Extends (src.isViolation())
+	to tgt :uml!Generalization (
+		general <- src.to.getViolation()
+	)
+	do {
+		src.refImmediateComposite().getViolation().generalization <- tgt;
+	}
+}
+
+-- Implements transformation
+rule ImplementsToInterfaceRealization {
+	from src :kdm!Implements (src.isViolation())
+	to tgt :uml!InterfaceRealization (
+		supplier <- src.to.getViolation(),
+		client <- src.from.getViolation(),
+		contract <- src.to.getViolation()
+	)	
+	do {
+		src.refImmediateComposite().getViolation().interfaceRealization <- tgt;
+	}
+}
+
+ 
+rule AggregatedRelationshipToDependency {
+	from src :kdm!AggregatedRelationship (
+		src.getModelContainer().name = 'violations' 
+		and src.relation->exists(e | 
+			not e.oclIsKindOf(kdm!Extends) 
+		and not e.oclIsKindOf(kdm!Implements) 
+		and not e.oclIsKindOf(kdm!Imports)
+		and not (e.oclIsKindOf(kdm!HasType) and e.refImmediateComposite().refImmediateComposite().oclIsKindOf(kdm!ClassUnit))
+		and (e.oclIsKindOf(kdm!HasType) or e.oclIsKindOf(kdm!Calls) or e.oclIsKindOf(kdm!Creates)))
+	)
+	using {
+		srcClass: kdm!ClassUnit = src.relation->first().from.getClassContainer();
+		destClass: kdm!ClassUnit = src.relation->first().to.getClassContainer();
+		comment: String = '';
+	}
+	to tgt :uml!Dependency (
+		client <- srcClass.getViolation(),
+		supplier <- destClass.getViolation(),
+		ownedComment <- commentUML
+	),
+	commentUML: uml!Comment (
+		annotatedElement <- src
+	)
+	do {
+		for (relation in src.relation) {
+			if (relation.oclIsKindOf(kdm!HasType)) {
+				comment <- comment.concat(relation.refImmediateComposite().type.name).concat(' ').concat(relation.refImmediateComposite().name).concat(';\n--------------\n');
+			}
+			if (relation.oclIsKindOf(kdm!Creates)) {
+				if (relation.refImmediateComposite().refImmediateComposite().actionRelation->exists(e | e.oclIsKindOf(kdm!Writes))) {
+					comment <- comment.concat(relation.refImmediateComposite().refImmediateComposite().actionRelation->select(e | e.oclIsKindOf(kdm!Writes))->first().to.name).concat(' = ');
+				}
+					
+				comment <- comment.concat('new ').concat(relation.to.name).concat('();\n--------------\n');
+			}
+		}
+		tgt.ownedComment->first().body <- comment;
+		srcClass.getParent().getViolation().packagedElement <- tgt;
+	}
+}
+
+lazy rule DataElementToAssociation {
+	from src :kdm!DataElement
+	to tgt :uml!Association (
+		memberEnd <- src.getViolation(),
+		memberEnd <- targetProperty,
+		ownedEnd <- targetProperty
+	), 
+	targetProperty :uml!Property (
+		type <- src.getParent().getViolation()
+	)
+	do {
+		src->getParent().getParent().getViolation().packagedElement <- tgt;
+	}
+}
+
+rule StorableUnitToProperty {
+	from src :kdm!StorableUnit (
+		not (src.kind = #local)
+		and not (src.refImmediateComposite().oclIsTypeOf(kdm!CodeModel)) -- Unresolved items
+		and src.isViolation()
+	)
+	to tgt :uml!Property (
+		name <- src.name,
+		visibility <- src->getVisibility(),
+		type <- src->getDataElementType().getViolation(),
+		isStatic <- if (src.kind = #static) then true else false endif,
+		lowerValue <- lower,
+		upperValue <- upper
+	), 
+	lower : uml!LiteralInteger (
+		value <- src.getLowerCardinality()
+	), 
+	upper : uml! LiteralUnlimitedNatural (
+		value <- src.getUpperCardinality()
+	)
+	do {
+		src.refImmediateComposite().getViolation().ownedAttribute <- tgt;
+		
+		if (not (src->getDataElementType().oclIsUndefined())) {
+			if (not (src->getDataElementType()->isPrimitiveType())) {
+				thisModule->DataElementToAssociation(src);
+			}
+		}
+	}
+}
+
+-- InterfaceUnit transformation
+rule InterfaceUnitToInterface {
+	from src :kdm!InterfaceUnit (
+		not src.refImmediateComposite().oclIsTypeOf(kdm!TemplateUnit)
+		and src.isViolation()
+	)
+	to tgt :uml!Interface (
+		name <- src.name,
+		visibility <- src->getVisibility()
+		-- specific case to manage templated methods (wrapped in a TemplateUnit (abstract class))
+--		nestedClassifier <- src.codeElement->select(e | e.oclIsKindOf(kdm!Datatype))
+--				->select(e | if (e.oclIsTypeOf(kdm!TemplateUnit)) then not (e->getRealType().oclIsTypeOf(kdm!MethodUnit)) else true endif)
+--		,generalization <- src.codeRelation->select(e | e.oclIsTypeOf(kdm!Extends))
+--		,ownedOperation <- src.codeElement->select(e | e.oclIsTypeOf(kdm!MethodUnit))
+--		,ownedAttribute <- src.codeElement->select(e | e.oclIsKindOf(kdm!DataElement))
+	)
+	do {
+		src->getParent().getViolation().packagedElement <- tgt;
+	}
+}
+
+-- ClassUnit transformation
+rule ClassUnitToClass {
+	from src :kdm!ClassUnit (
+		src.refImmediateComposite().oclIsTypeOf(kdm!Package)
+		and not src.refImmediateComposite().oclIsTypeOf(kdm!StorableUnit)
+		and not src.refImmediateComposite().oclIsTypeOf(kdm!TemplateUnit)
+		and src.isViolation()
+	)
+	to tgt :uml!Class(
+		name <- src.name,
+		visibility <- src->getVisibility(),
+		isAbstract <- src.isAbstract
+	)
+	do {
+		src->getParent().getViolation().packagedElement <- tgt;
+	}
+}

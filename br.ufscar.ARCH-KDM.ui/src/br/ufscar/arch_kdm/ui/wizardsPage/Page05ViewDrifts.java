@@ -91,7 +91,7 @@ public class Page05ViewDrifts extends WizardPage {
 		Composite composite_1 = new Composite(scrolledComposite, SWT.NONE);
 		composite_1.setLayout(new GridLayout(2, false));
 
-		cbAlgoType = new Combo(composite_1, SWT.NONE);
+		cbAlgoType = new Combo(composite_1, SWT.READ_ONLY);
 		cbAlgoType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		fillCbAlgoType();
 
