@@ -16,6 +16,7 @@ Export-Package: br.ufscar.arch_kdm.core.architecturalCompilanceChecking,
  br.ufscar.arch_kdm.core.mapping,
  br.ufscar.arch_kdm.core.util,
  br.ufscar.arch_kdm.core.visualization,
+ br.ufscar.arch_kdm.core.visualization.groupingAlgorithms,
  br.ufscar.arch_kdm.core.visualization.model,
  br.ufscar.arch_kdm.old.model,
  br.ufscar.arch_kdm.old.util

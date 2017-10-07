@@ -27,9 +27,11 @@ import br.ufscar.arch_kdm.core.visualization.model.Drift;
 import br.ufscar.arch_kdm.core.visualization.model.Violations;
 import br.ufscar.arch_kdm.ui.util.IconsType;
 import br.ufscar.arch_kdm.ui.util.InterfaceGenericMethods;
+import br.ufscar.arch_kdm.ui.visualization.groupingTypes.GroupingAlgorithmTypes;
 import br.ufscar.arch_kdm.ui.wizards.ArchKDMWizard;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Combo;
 
 /**
  * @author Landi
@@ -43,7 +45,8 @@ public class Page05ViewDrifts extends WizardPage {
 	private Text tfLoC;
 	private Tree treeDriftsFounded;
 
-	private String optionsAlgo = "-E 0.45 "	+ "-M 0";
+	private Combo cbAlgoType;
+	private Object config;
 
 
 	/**
@@ -88,6 +91,30 @@ public class Page05ViewDrifts extends WizardPage {
 		Composite composite_1 = new Composite(scrolledComposite, SWT.NONE);
 		composite_1.setLayout(new GridLayout(2, false));
 
+		cbAlgoType = new Combo(composite_1, SWT.NONE);
+		cbAlgoType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		fillCbAlgoType();
+
+		Button bConfigureMLAlgo = new Button(composite_1, SWT.NONE);
+		bConfigureMLAlgo.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDown(MouseEvent e) {
+				configureAlgoritm();
+			}
+		});
+		bConfigureMLAlgo.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 2, 1));
+		bConfigureMLAlgo.setText("Configure ML Algo");
+
+		Button bEvaluateDrifts = new Button(composite_1, SWT.NONE);
+		bEvaluateDrifts.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDown(MouseEvent e) {
+				executeMLAlgo();
+			}
+		});
+		bEvaluateDrifts.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 2, 1));
+		bEvaluateDrifts.setText("Evaluate Drifts");
+
 		Label lblDetails = new Label(composite_1, SWT.NONE);
 		lblDetails.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 2, 1));
 		lblDetails.setText("Details");
@@ -131,28 +158,19 @@ public class Page05ViewDrifts extends WizardPage {
 		tfLoC = new Text(composite_1, SWT.BORDER);
 		tfLoC.setEditable(false);
 		tfLoC.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-
-		Button bConfigureMLAlgo = new Button(composite_1, SWT.NONE);
-		bConfigureMLAlgo.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseDown(MouseEvent e) {
-				configureAlgoritm();
-			}
-		});
-		bConfigureMLAlgo.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 2, 1));
-		bConfigureMLAlgo.setText("Configure ML Algo");
-
-		Button bEvaluateDrifts = new Button(composite_1, SWT.NONE);
-		bEvaluateDrifts.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseDown(MouseEvent e) {
-				executeMLAlgo();
-			}
-		});
-		bEvaluateDrifts.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 2, 1));
-		bEvaluateDrifts.setText("Evaluate Drifts");
 		scrolledComposite.setContent(composite_1);
 		scrolledComposite.setMinSize(composite_1.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+	}
+
+	/**
+	 * @author André
+	 */
+	private void fillCbAlgoType() {
+		for (GroupingAlgorithmTypes algo : GroupingAlgorithmTypes.values()) {
+			cbAlgoType.add(algo.getDescription());
+		}
+		
+		cbAlgoType.select(0);
 	}
 
 	/**
@@ -165,13 +183,13 @@ public class Page05ViewDrifts extends WizardPage {
 		for (TreeItem treeItem : selection2) {
 			data[0] = treeItem.getData();
 		}
-		
+
 		if(data[0] instanceof Drift){
 			fillData((Drift) data[0]);
 		}else if(data[0] instanceof Violations){
 			fillData((Violations) data[0]);
 		}
-	
+
 	}
 
 	/**
@@ -202,31 +220,26 @@ public class Page05ViewDrifts extends WizardPage {
 	 * @author Landi
 	 */
 	protected void configureAlgoritm() {
-		String textInterface = "Select the configuration of the DBScan Algo:";
-		optionsAlgo = InterfaceGenericMethods.dialogWhatAlgoConfiguration(textInterface, null);
+		config = GroupingAlgorithmTypes.getAlgo(cbAlgoType.getText()).configAlgo();
 	}
 
 	/**
 	 * @author Landi
 	 */
 	protected void executeMLAlgo() {
-		String KDMViolationsPath = ((ArchKDMWizard)this.getWizard()).getPathActualArchitecture().replace(".xmi", "-violations.xmi");
-
-		VisualizeDrifts visualizeDrifts = new VisualizeDrifts();
-		visualizeDrifts.setModelViolatingPath(KDMViolationsPath);
-		visualizeDrifts.setAlgorithmOptions(optionsAlgo);
-
-		List<Drift> drifts = visualizeDrifts.getDrifts();
-		System.out.println(drifts.size());
+		if(config == null){
+			config = GroupingAlgorithmTypes.getAlgo(cbAlgoType.getText()).configAlgoDefault();
+		}
+		List<Drift> drifts = GroupingAlgorithmTypes.getAlgo(cbAlgoType.getText()).execAlgo(this.getWizard(), config);
 		fillDrifts(drifts);
-
+		config = null;
 	}
 
 	/**
 	 * @author Landi
 	 * @param drifts
 	 */
-	private void fillDrifts(List<Drift> drifts) {
+	public void fillDrifts(List<Drift> drifts) {
 		treeDriftsFounded.removeAll();
 		TreeItem treeItemParent = null;
 		for (Drift drift : drifts) {
@@ -236,7 +249,7 @@ public class Page05ViewDrifts extends WizardPage {
 			treeItemParent.setText("[" + drift.getName() + "] ");
 			treeItemParent.setData(drift);
 
-			this.fillViolations(treeItemParent, drift);
+			fillViolations(treeItemParent, drift);
 
 		}
 	}
