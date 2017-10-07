@@ -453,11 +453,12 @@ public class GenericMethods {
 	public static void splitAggregatedByRelatedRelationships(EList<AbstractStructureElement> eList) {
 		for (AbstractStructureElement abstractStructureElement: eList) {
 			ArrayList<AggregatedRelationship> groups = new ArrayList<AggregatedRelationship>();
-			for (AggregatedRelationship aggregatedRelationship: abstractStructureElement.getAggregated()) {				
+			for (AggregatedRelationship aggregatedRelationship: abstractStructureElement.getAggregated()) {
+				//TODO: Optmizie the two-dimensional loop below in order to not check twice whether two violations are related to each other.
 				for (KDMRelationship relation_1: aggregatedRelationship.getRelation()) {	
 					for (KDMRelationship relation_2: aggregatedRelationship.getRelation()) {
 						if (relation_1 != relation_2) {
-							if (isParent(relation_1.getTo(), relation_2.getTo())) {
+							if (isRelated(relation_1.getTo(), relation_2.getTo()) && isRelated(relation_1.getFrom(), relation_2.getFrom())) {
 								AggregatedRelationship group = getRelationshipGroup(relation_1, groups);
 								group = (group != null)?group:getRelationshipGroup(relation_2, groups);
 								
@@ -495,9 +496,9 @@ public class GenericMethods {
 		return null;
 	}
 	
-//	private static boolean isRelated(KDMEntity originalCodeElement_1, KDMEntity originalCodeElement_2) {
-//		return isParent(originalCodeElement_1, originalCodeElement_2) || isParent(originalCodeElement_2, originalCodeElement_1);
-//	}
+	private static boolean isRelated(KDMEntity originalCodeElement_1, KDMEntity originalCodeElement_2) {
+		return isParent(originalCodeElement_1, originalCodeElement_2) || isParent(originalCodeElement_2, originalCodeElement_1);
+	}
 	
 	private static boolean isParent(EObject originalObject_1, EObject originalObject_2) {
 		// TODO Auto-generated method stub
@@ -512,6 +513,16 @@ public class GenericMethods {
 		
 		return false;
 	}
+	
+//	private static EObject getRelationshipClass(EObject relationship) {
+//		if (!(relationship instanceof Segment))
+//			if (relationship instanceof ClassUnit)
+//				return relationship;
+//			else			
+//				getRelationshipClass(relationship.eContainer());
+//		
+//		return null;
+//	}
 
 	/**
 	 * @author Landi
