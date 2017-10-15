@@ -39,7 +39,7 @@ public enum GroupingAlgorithmTypes implements IGroupingAlgorithmType{
 		@Override
 		public List<Drift> execAlgo(Object wizard, Object config) {
 			GenericMethods.splitAggregatedByRelatedRelationships(((ArchKDMWizard) wizard).getStructureDrifts().getStructureElement());
-			String KDMPath = ((ArchKDMWizard) wizard).getPathActualArchitecture().replace(".xmi", "-violations-archKDM-grouped.kdm");
+			String KDMPath = ((ArchKDMWizard) wizard).getPathActualArchitecture().replace(".xmi", "-violations-ArchKDM2UML.kdm");
 			GenericMethods.serializeSegment("file:///"+KDMPath, ((ArchKDMWizard) wizard).getSegmentActualArchitecture());
 			ATLLauncher atl = new ATLLauncher(KDMPath, KDMPath.replace(".kdm", ".uml"));
 			atl.launch();
