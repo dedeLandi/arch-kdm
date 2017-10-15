@@ -452,36 +452,42 @@ public class GenericMethods {
 	//TODO Refactor and optimize this method
 	public static void splitAggregatedByRelatedRelationships(EList<AbstractStructureElement> eList) {
 		for (AbstractStructureElement abstractStructureElement: eList) {
-			ArrayList<AggregatedRelationship> groups = new ArrayList<AggregatedRelationship>();
+			ArrayList<ArrayList<AggregatedRelationship>> aggregatedsGroupsList = new ArrayList<ArrayList<AggregatedRelationship>>();
+			
 			for (AggregatedRelationship aggregatedRelationship: abstractStructureElement.getAggregated()) {
+				ArrayList<AggregatedRelationship> aggregatedsGroup = new ArrayList<AggregatedRelationship>();
+				
 				//TODO: Optmizie the two-dimensional loop below in order to not check twice whether two violations are related to each other.
 				for (KDMRelationship relation_1: aggregatedRelationship.getRelation()) {	
 					for (KDMRelationship relation_2: aggregatedRelationship.getRelation()) {
 						if (relation_1 != relation_2) {
 							if (isRelated(relation_1.getTo(), relation_2.getTo()) && isRelated(relation_1.getFrom(), relation_2.getFrom())) {
-								AggregatedRelationship group = getRelationshipGroup(relation_1, groups);
-								group = (group != null)?group:getRelationshipGroup(relation_2, groups);
+								AggregatedRelationship aggregated = getRelationshipGroup(relation_1, aggregatedsGroup);
+								aggregated = (aggregated != null)?aggregated:getRelationshipGroup(relation_2, aggregatedsGroup);
 								
-								if (group == null) {
-									group = CoreFactory.eINSTANCE.createAggregatedRelationship();
-									group.setFrom(aggregatedRelationship.getFrom());
-									group.setTo(aggregatedRelationship.getTo());
-									groups.add(group);
+								if (aggregated == null) {
+									aggregated = CoreFactory.eINSTANCE.createAggregatedRelationship();
+									aggregated.setFrom(aggregatedRelationship.getFrom());
+									aggregated.setTo(aggregatedRelationship.getTo());
+									aggregatedsGroup.add(aggregated);
 								}
 								
-								if (!group.getRelation().contains(relation_1))
-									group.getRelation().add(relation_1);
-								if (!group.getRelation().contains(relation_2))
-									group.getRelation().add(relation_2);
-								group.setDensity(group.getRelation().size());
+								if (!aggregated.getRelation().contains(relation_1))
+									aggregated.getRelation().add(relation_1);
+								if (!aggregated.getRelation().contains(relation_2))
+									aggregated.getRelation().add(relation_2);
+								aggregated.setDensity(aggregated.getRelation().size());
 							}
 						}
 					}
 				}
+				
+				aggregatedsGroupsList.add(aggregatedsGroup);
 			}
 			
 			abstractStructureElement.getAggregated().clear();
-			abstractStructureElement.getAggregated().addAll(groups);
+			for(ArrayList<AggregatedRelationship>aggregatedsGroup: aggregatedsGroupsList)
+				abstractStructureElement.getAggregated().addAll(aggregatedsGroup);
 			
 			if (abstractStructureElement.getStructureElement().size() > 0)
 				splitAggregatedByRelatedRelationships(abstractStructureElement.getStructureElement());
