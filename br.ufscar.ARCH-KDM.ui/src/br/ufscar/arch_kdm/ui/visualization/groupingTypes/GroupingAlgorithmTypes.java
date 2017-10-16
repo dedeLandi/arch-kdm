@@ -47,11 +47,11 @@ public enum GroupingAlgorithmTypes implements IGroupingAlgorithmType{
 			ArchKDM2UML atl;
 			
 			if (code) {
-				atl = new ArchKDM2UML(KDMPath, KDMPath.replace(".kdm", ".uml"), false);
+				atl = new ArchKDM2UML(KDMPath, KDMPath.replace(".kdm", "codeView.uml"), false);
 				atl.run();
 			}			
 			if (structure) {
-				atl = new ArchKDM2UML(KDMPath, KDMPath.replace(".kdm", ".uml"), true);
+				atl = new ArchKDM2UML(KDMPath, KDMPath.replace(".kdm", "structureView.uml"), true);
 				atl.run();
 			}
 			
