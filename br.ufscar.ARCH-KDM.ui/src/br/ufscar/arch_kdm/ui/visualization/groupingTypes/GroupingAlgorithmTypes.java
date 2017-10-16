@@ -28,7 +28,10 @@ public enum GroupingAlgorithmTypes implements IGroupingAlgorithmType{
 		
 		@Override
 		public Object configAlgo() {
-			// TODO Auto-generated method stub
+			// TODO Criar uma dialog com 2 checkboxes.
+			// TODO Checkboxes labels: Code View e Structure View
+			// TODO structure = true se structure view estiver checada, senão false
+			// TODO code = true se code view estiver checada, senão false
 			return null;
 		}
 
@@ -47,11 +50,11 @@ public enum GroupingAlgorithmTypes implements IGroupingAlgorithmType{
 			ArchKDM2UML atl;
 			
 			if (code) {
-				atl = new ArchKDM2UML(KDMPath, KDMPath.replace(".kdm", "codeView.uml"), false);
+				atl = new ArchKDM2UML(KDMPath, KDMPath.replace(".kdm", "-codeView.uml"), false);
 				atl.run();
 			}			
 			if (structure) {
-				atl = new ArchKDM2UML(KDMPath, KDMPath.replace(".kdm", "structureView.uml"), true);
+				atl = new ArchKDM2UML(KDMPath, KDMPath.replace(".kdm", "-structureView.uml"), true);
 				atl.run();
 			}
 			
