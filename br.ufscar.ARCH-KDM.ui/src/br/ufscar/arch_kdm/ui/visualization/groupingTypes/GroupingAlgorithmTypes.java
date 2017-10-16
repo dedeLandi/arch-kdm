@@ -7,7 +7,7 @@ package br.ufscar.arch_kdm.ui.visualization.groupingTypes;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.ufscar.arch_kdm.core.util.ATLLauncher;
+import br.ufscar.arch_kdm.core.util.ArchKDM2UML;
 import br.ufscar.arch_kdm.core.util.GenericMethods;
 import br.ufscar.arch_kdm.core.visualization.IVisualizeDriftsAlgo;
 import br.ufscar.arch_kdm.core.visualization.VisualizeDriftsFactory;
@@ -23,7 +23,9 @@ import br.ufscar.arch_kdm.ui.wizards.ArchKDMWizard;
 public enum GroupingAlgorithmTypes implements IGroupingAlgorithmType{
 
 	GROUPING_BY_TO_FROM("Grouping TO-FROM"){
-
+		boolean structure = true; 
+		boolean code = true;
+		
 		@Override
 		public Object configAlgo() {
 			// TODO Auto-generated method stub
@@ -41,8 +43,18 @@ public enum GroupingAlgorithmTypes implements IGroupingAlgorithmType{
 			GenericMethods.splitAggregatedByRelatedRelationships(((ArchKDMWizard) wizard).getStructureDrifts().getStructureElement());
 			String KDMPath = ((ArchKDMWizard) wizard).getPathActualArchitecture().replace(".xmi", "-violations-ArchKDM2UML.kdm");
 			GenericMethods.serializeSegment("file:///"+KDMPath, ((ArchKDMWizard) wizard).getSegmentActualArchitecture());
-			ATLLauncher atl = new ATLLauncher(KDMPath, KDMPath.replace(".kdm", ".uml"));
-			atl.launch();
+			
+			ArchKDM2UML atl;
+			
+			if (code) {
+				atl = new ArchKDM2UML(KDMPath, KDMPath.replace(".kdm", ".uml"), false);
+				atl.run();
+			}			
+			if (structure) {
+				atl = new ArchKDM2UML(KDMPath, KDMPath.replace(".kdm", ".uml"), true);
+				atl.run();
+			}
+			
 			return new ArrayList<Drift>();
 		}
 		

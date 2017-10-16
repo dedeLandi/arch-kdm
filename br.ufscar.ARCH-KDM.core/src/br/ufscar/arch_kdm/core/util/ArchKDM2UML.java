@@ -8,9 +8,10 @@ import org.eclipse.gmt.modisco.infra.common.core.internal.utils.ModelUtils;
 import org.eclipse.m2m.atl.core.ATLCoreException;;
 
 @SuppressWarnings("restriction")
-public class ATLLauncher {
+public class ArchKDM2UML {
 	private String inputFile;
 	private String outputFile;
+	private boolean structureOnly;
 
 	private Resource basicConvertKDMModel(final URI sourceUri)
 			throws IOException, ATLCoreException {
@@ -18,17 +19,18 @@ public class ATLLauncher {
 
 		final KdmToUmlConverter converter = new KdmToUmlConverter();
 
-		Resource[] out = converter.getUML2ModelFromKDMModel(sourceModel, false);
+		Resource[] out = converter.getUML2ModelFromKDMModel(sourceModel, this.structureOnly);
 
 		return out[0];
 	}
 
-	public ATLLauncher(String inputFile, String outputFile) {
+	public ArchKDM2UML(String inputFile, String outputFile, boolean structureOnly) {
 		this.inputFile = inputFile;
 		this.outputFile = outputFile;
+		this.structureOnly = structureOnly;
 	}
 	
-	public void launch() {
+	public void run() {
 		final URI sourceUri = URI.createFileURI(this.inputFile);
 
 		Resource output = null;
