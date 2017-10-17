@@ -449,86 +449,119 @@ public class GenericMethods {
 	 * @param structureModel
 	 * Split an AggregatedRelationship into AggregatedRelationships, each containing only related KDMRelationships.
 	 */
-	//TODO Refactor and optimize this method
+	 static private class AggregatedGroup {
+		public AggregatedGroup(AbstractStructureElement from, AbstractStructureElement to, ArrayList<AggregatedRelationship> aggregatedGroup) {
+			super();
+			this.from = from;
+			this.to = to;
+			this.aggregatedGroup = aggregatedGroup;
+		}
+		AbstractStructureElement from, to;
+		ArrayList<AggregatedRelationship> aggregatedGroup;	
+		
+		public AbstractStructureElement getFrom() {
+			return from;
+		}
+		public AbstractStructureElement getTo() {
+			return to;
+		}
+		public ArrayList<AggregatedRelationship> getAggregatedGroup() {
+			return aggregatedGroup;
+		}
+	}
+	
 	public static void splitAggregatedByRelatedRelationships(EList<AbstractStructureElement> eList) {
 		for (AbstractStructureElement abstractStructureElement: eList) {
-			ArrayList<ArrayList<AggregatedRelationship>> aggregatedsGroupsList = new ArrayList<ArrayList<AggregatedRelationship>>();
+			ArrayList<AggregatedGroup> aggregatedsGroupsList = new ArrayList<AggregatedGroup>();
 			
 			for (AggregatedRelationship aggregatedRelationship: abstractStructureElement.getAggregated()) {
 				ArrayList<AggregatedRelationship> aggregatedsGroup = new ArrayList<AggregatedRelationship>();
-				
-				//TODO: Optmizie the two-dimensional loop below in order to not check twice whether two violations are related to each other.
-				for (KDMRelationship relation_1: aggregatedRelationship.getRelation()) {	
-					for (KDMRelationship relation_2: aggregatedRelationship.getRelation()) {
-						if (relation_1 != relation_2) {
-							if (isRelated(relation_1.getTo(), relation_2.getTo()) && isRelated(relation_1.getFrom(), relation_2.getFrom())) {
-								AggregatedRelationship aggregated = getRelationshipGroup(relation_1, aggregatedsGroup);
-								aggregated = (aggregated != null)?aggregated:getRelationshipGroup(relation_2, aggregatedsGroup);
-								
-								if (aggregated == null) {
-									aggregated = CoreFactory.eINSTANCE.createAggregatedRelationship();
-									aggregated.setFrom(aggregatedRelationship.getFrom());
-									aggregated.setTo(aggregatedRelationship.getTo());
-									aggregatedsGroup.add(aggregated);
-								}
-								
-								if (!aggregated.getRelation().contains(relation_1))
-									aggregated.getRelation().add(relation_1);
-								if (!aggregated.getRelation().contains(relation_2))
-									aggregated.getRelation().add(relation_2);
-								aggregated.setDensity(aggregated.getRelation().size());
+
+				for (int i = 0; i < aggregatedRelationship.getRelation().size(); i++) {
+					KDMRelationship relation_1 = aggregatedRelationship.getRelation().get(i);
+					
+					for (int j = i; j < aggregatedRelationship.getRelation().size(); j++) {
+						KDMRelationship relation_2 = aggregatedRelationship.getRelation().get(j);
+						
+						if (isRelated(relation_1, relation_2)) {
+							AggregatedRelationship aggregated = getRelationshipGroup(relation_1, aggregatedsGroup);
+							aggregated = (aggregated != null)?aggregated:getRelationshipGroup(relation_2, aggregatedsGroup);
+							
+							if (aggregated == null) {
+								aggregated = CoreFactory.eINSTANCE.createAggregatedRelationship();
+								aggregated.setFrom(aggregatedRelationship.getFrom());
+								aggregated.setTo(aggregatedRelationship.getTo());
+								aggregatedsGroup.add(aggregated);
 							}
+							
+							if (!aggregated.getRelation().contains(relation_1))
+								aggregated.getRelation().add(relation_1);
+							if (!aggregated.getRelation().contains(relation_2))
+								aggregated.getRelation().add(relation_2);
+							aggregated.setDensity(aggregated.getRelation().size());
 						}
 					}
 				}
 				
-				aggregatedsGroupsList.add(aggregatedsGroup);
+				AggregatedGroup group = new AggregatedGroup((AbstractStructureElement) aggregatedRelationship.getFrom(), (AbstractStructureElement) aggregatedRelationship.getTo(), aggregatedsGroup);
+				aggregatedsGroupsList.add(group);
+				
+				group.getFrom().getOutAggregated().remove(aggregatedRelationship);
+				group.getTo().getInAggregated().remove(aggregatedRelationship);
 			}
 			
 			abstractStructureElement.getAggregated().clear();
-			for(ArrayList<AggregatedRelationship>aggregatedsGroup: aggregatedsGroupsList)
-				abstractStructureElement.getAggregated().addAll(aggregatedsGroup);
+			for(AggregatedGroup group: aggregatedsGroupsList)
+				for(AggregatedRelationship aggregated: group.getAggregatedGroup()) {
+					abstractStructureElement.getAggregated().add(aggregated);
+					group.getFrom().getOutAggregated().add(aggregated);	
+					group.getTo().getInAggregated().add(aggregated);	
+				}
 			
 			if (abstractStructureElement.getStructureElement().size() > 0)
 				splitAggregatedByRelatedRelationships(abstractStructureElement.getStructureElement());
 		}
 	}
 
-	private static AggregatedRelationship getRelationshipGroup(KDMRelationship relation_1, ArrayList<AggregatedRelationship> groups) {
+	private static boolean isRelated(KDMRelationship relation_1, KDMRelationship relation_2) {
+		return getClassUnit(relation_1.getTo()) == getClassUnit(relation_2.getTo()) && getClassUnit(relation_1.getFrom()) == getClassUnit(relation_2.getFrom());
+	}
+	
+	private static AggregatedRelationship getRelationshipGroup(KDMRelationship relation, ArrayList<AggregatedRelationship> groups) {
 		for (AggregatedRelationship group: groups)
-			if (group.getRelation().contains(relation_1))
+			if (group.getRelation().contains(relation))
 				return group;
 		
 		return null;
 	}
 	
-	private static boolean isRelated(KDMEntity originalCodeElement_1, KDMEntity originalCodeElement_2) {
-		return isParent(originalCodeElement_1, originalCodeElement_2) || isParent(originalCodeElement_2, originalCodeElement_1);
-	}
-	
-	private static boolean isParent(EObject originalObject_1, EObject originalObject_2) {
-		// TODO Auto-generated method stub
-		EObject object = originalObject_2;
-		
-		while (object != null) {
-			if (object == originalObject_1)
-				return true;
-			
-			object = object.eContainer();
-		};
-		
-		return false;
-	}
-	
-//	private static EObject getRelationshipClass(EObject relationship) {
-//		if (!(relationship instanceof Segment))
-//			if (relationship instanceof ClassUnit)
-//				return relationship;
-//			else			
-//				getRelationshipClass(relationship.eContainer());
-//		
-//		return null;
+//	private static boolean isRelated(KDMEntity originalCodeElement_1, KDMEntity originalCodeElement_2) {
+//		return isParent(originalCodeElement_1, originalCodeElement_2) || isParent(originalCodeElement_2, originalCodeElement_1);
 //	}
+	
+//	private static boolean isParent(EObject originalObject_1, EObject originalObject_2) {
+//		// TODO Auto-generated method stub
+//		EObject object = originalObject_2;
+//		
+//		while (object != null) {
+//			if (object == originalObject_1)
+//				return true;
+//			
+//			object = object.eContainer();
+//		};
+//		
+//		return false;
+//	}
+	
+	private static ClassUnit getClassUnit(EObject object) {
+		if (!(object instanceof Segment))
+			if (object instanceof ClassUnit)
+				return (ClassUnit) object;
+			else			
+				return getClassUnit(object.eContainer());
+		
+		return null;
+	}
 
 	/**
 	 * @author Landi
