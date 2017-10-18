@@ -5355,4 +5355,16 @@
       </structureElement>
     </structureElement>
   </model>
+  <model xsi:type="structure:StructureModel" name="violations">
+    <structureElement xsi:type="structure:Subsystem" name="ss1">
+      <structureElement xsi:type="structure:Layer" name="l3" outAggregated="//@model.4/@structureElement.0/@structureElement.0/@aggregated.0 //@model.4/@structureElement.0/@structureElement.0/@aggregated.1" implementation="//@model.0/@codeElement.0/@codeElement.0/@codeElement.0/@codeElement.2">
+        <aggregated from="//@model.4/@structureElement.0/@structureElement.0" to="//@model.4/@structureElement.0/@structureElement.2" relation="//@model.0/@codeElement.0/@codeElement.0/@codeElement.0/@codeElement.2/@codeElement.0/@codeElement.4/@codeElement.1/@codeElement.0/@codeElement.1/@actionRelation.0 //@model.0/@codeElement.0/@codeElement.0/@codeElement.0/@codeElement.2/@codeElement.0/@codeElement.4/@codeElement.1/@codeElement.1/@codeElement.0/@codeElement.0/@actionRelation.0 //@model.0/@codeElement.0/@codeElement.0/@codeElement.0/@codeElement.2/@codeElement.0/@codeElement.4/@codeElement.1/@codeElement.0/@codeElement.1/@actionRelation.1" density="3"/>
+        <aggregated from="//@model.4/@structureElement.0/@structureElement.0" to="//@model.4/@structureElement.0/@structureElement.2" relation="//@model.0/@codeElement.0/@codeElement.0/@codeElement.0/@codeElement.2/@codeElement.2/@codeElement.12/@codeElement.1/@codeElement.0/@codeElement.1/@actionRelation.0 //@model.0/@codeElement.0/@codeElement.0/@codeElement.0/@codeElement.2/@codeElement.2/@codeElement.12/@codeElement.1/@codeElement.1/@codeElement.0/@actionRelation.0 //@model.0/@codeElement.0/@codeElement.0/@codeElement.0/@codeElement.2/@codeElement.2/@codeElement.12/@codeElement.1/@codeElement.0/@codeElement.1/@actionRelation.1" density="3"/>
+      </structureElement>
+      <structureElement xsi:type="structure:Layer" name="l2" inAggregated="//@model.4/@structureElement.0/@structureElement.2/@aggregated.0" implementation="//@model.0/@codeElement.0/@codeElement.0/@codeElement.0/@codeElement.0"/>
+      <structureElement xsi:type="structure:Layer" name="l1" inAggregated="//@model.4/@structureElement.0/@structureElement.0/@aggregated.0 //@model.4/@structureElement.0/@structureElement.0/@aggregated.1" outAggregated="//@model.4/@structureElement.0/@structureElement.2/@aggregated.0" implementation="//@model.0/@codeElement.0/@codeElement.0/@codeElement.0/@codeElement.1">
+        <aggregated from="//@model.4/@structureElement.0/@structureElement.2" to="//@model.4/@structureElement.0/@structureElement.1" relation="//@model.0/@codeElement.0/@codeElement.0/@codeElement.0/@codeElement.1/@codeElement.1/@codeElement.4/@codeElement.1/@codeElement.0/@codeElement.0/@actionRelation.0 //@model.0/@codeElement.0/@codeElement.0/@codeElement.0/@codeElement.1/@codeElement.1/@codeRelation.0" density="2"/>
+      </structureElement>
+    </structureElement>
+  </model>
 </kdm:Segment>
