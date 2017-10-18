@@ -8,6 +8,8 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
+import org.eclipse.jface.dialogs.MessageDialog;
+
 import br.ufscar.arch_kdm.core.visualization.IVisualizeDriftsAlgo;
 import br.ufscar.arch_kdm.core.visualization.VisualizeDriftsFactory;
 import br.ufscar.arch_kdm.core.visualization.groupingAlgorithms.IGroupingAlgorithmType;
@@ -48,7 +50,7 @@ public enum GroupingAlgorithmTypes implements IGroupingAlgorithmType{
 			
 			List<Drift> drifts = visualizeDrifts.getDrifts();
 			System.out.println(drifts.size());
-			JOptionPane.showMessageDialog(null, "Algorith finish the run and generate the files");
+			MessageDialog.open(MessageDialog.INFORMATION, null, "Algorithm finished", "Algorithm execution finished and files generated.", MessageDialog.INFORMATION);
 			return drifts;
 			
 //			GenericMethods.splitAggregatedByRelatedRelationships(((ArchKDMWizard) wizard).getStructureDrifts().getStructureElement());

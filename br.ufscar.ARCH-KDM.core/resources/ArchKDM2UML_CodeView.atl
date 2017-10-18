@@ -501,7 +501,7 @@ rule AggregatedRelationshipToDependency {
 			if (relation.oclIsKindOf(kdm!HasType)) {
 				comment <- comment.concat(relation.refImmediateComposite().type.name).
 						concat(' ').concat(relation.refImmediateComposite().name).
-						concat(';\n--------------\n');
+						concat(';\n************************\n');
 			}
 			if (relation.oclIsKindOf(kdm!Creates)) {
 				if (relation.refImmediateComposite().refImmediateComposite().
@@ -512,7 +512,19 @@ rule AggregatedRelationshipToDependency {
 				}
 					
 				comment <- comment.concat('new ').concat(relation.to.name).
-						concat('();\n--------------\n');
+						concat('();\n************************\n');
+			}
+			if (relation.oclIsKindOf(kdm!Extends)) {
+				comment <- comment.concat(relation.from.name).concat(' extends ').concat(relation.to.name).
+						concat('()\n************************\n');
+			}
+			if (relation.oclIsKindOf(kdm!Implements)) {
+				comment <- comment.concat(relation.from.name).concat(' implements ').concat(relation.to.name).
+						concat('\n************************\n');
+			}
+			if (relation.oclIsKindOf(kdm!Imports)) {
+				comment <- comment.concat('import ').concat(relation.to.name).
+						concat(';\n************************\n');
 			}
 		}
 		tgt.ownedComment -> first().body <- comment;

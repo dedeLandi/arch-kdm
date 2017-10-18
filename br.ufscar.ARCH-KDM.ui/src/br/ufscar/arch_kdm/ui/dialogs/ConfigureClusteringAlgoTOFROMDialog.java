@@ -11,6 +11,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
+import br.ufscar.arch_kdm.ui.visualization.groupingTypes.GroupingAlgorithmTypes;
+
 public class ConfigureClusteringAlgoTOFROMDialog extends Dialog{
 
 	private static String textSelection = "Select the configuration of the FROM TO Algo:";
@@ -20,6 +22,12 @@ public class ConfigureClusteringAlgoTOFROMDialog extends Dialog{
 	private Button btnGenerateUmlCode;
 
 	private Button btnGenerateUmlStructure;
+
+	private boolean generateUml;
+
+	private boolean generateUmlCode;
+
+	private boolean generateUmlStructure;
 
 	public ConfigureClusteringAlgoTOFROMDialog(Shell parentShell) {
 		super(parentShell);
@@ -36,16 +44,21 @@ public class ConfigureClusteringAlgoTOFROMDialog extends Dialog{
 		Label lblSelectOneModel = new Label(container, SWT.NONE);
 		lblSelectOneModel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 		lblSelectOneModel.setText(textSelection);
-
+		
+		String types[] = ((String) GroupingAlgorithmTypes.GROUPING_BY_TO_FROM.configAlgoDefault()).split(";");
+		
 		btnGenerateUml = new Button(container, SWT.CHECK);
 		btnGenerateUml.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 2, 1));
 		btnGenerateUml.setText("Generate UML");
+		btnGenerateUml.setSelection(Boolean.parseBoolean(types[0].split(":")[1]));
 
 		btnGenerateUmlCode = new Button(container, SWT.CHECK);
 		btnGenerateUmlCode.setText("Generate UML Code");
-
+		btnGenerateUmlCode.setSelection(Boolean.parseBoolean(types[1].split(":")[1]));
+		
 		btnGenerateUmlStructure = new Button(container, SWT.CHECK);
 		btnGenerateUmlStructure.setText("Generate UML Structure");
+		btnGenerateUmlStructure.setSelection(Boolean.parseBoolean(types[2].split(":")[1]));
 
 		return container;
 	}
@@ -62,6 +75,9 @@ public class ConfigureClusteringAlgoTOFROMDialog extends Dialog{
 	@Override
 	protected void okPressed() {
 		if(validateConfiguration()){
+			generateUml = btnGenerateUml.getSelection();
+			generateUmlCode = btnGenerateUmlCode.getSelection();
+			generateUmlStructure = btnGenerateUmlStructure.getSelection();
 			super.okPressed();
 		}
 	}
@@ -76,14 +92,14 @@ public class ConfigureClusteringAlgoTOFROMDialog extends Dialog{
 	}
 
 	public boolean getUML() {
-		return btnGenerateUml.getSelection();
+		return this.generateUml;
 	}
 
 	public boolean getUMLCode() {
-		return btnGenerateUmlCode.getSelection();
+		return this.generateUmlCode;
 	}
 
 	public boolean getUMLStructure() {
-		return btnGenerateUmlStructure.getSelection();
+		return this.generateUmlStructure;
 	}
 }
