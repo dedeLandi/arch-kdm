@@ -8,7 +8,8 @@ import org.eclipse.gmt.modisco.omg.kdm.kdm.KDMModel;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 
-import br.ufscar.arch_kdm.ui.dialogs.ConfigureClusteringAlgoDialog;
+import br.ufscar.arch_kdm.ui.dialogs.ConfigureClusteringAlgoTOFROMDialog;
+import br.ufscar.arch_kdm.ui.dialogs.ConfigureClusteringAlgoMatrixSimilarityDialog;
 import br.ufscar.arch_kdm.ui.dialogs.SelectionModelDialog;
 
 /**
@@ -39,13 +40,29 @@ public class InterfaceGenericMethods {
 	/**
 	 * @author Landi
 	 */
-	public static String dialogWhatAlgoConfiguration(String textInterface, Shell shell) {
-		ConfigureClusteringAlgoDialog.setTextSelection(textInterface);
-		ConfigureClusteringAlgoDialog dialog = new ConfigureClusteringAlgoDialog(shell);
+	public static String dialogWhatAlgoMatrixSimilarityConfiguration(String textInterface, Shell shell) {
+		ConfigureClusteringAlgoMatrixSimilarityDialog.setTextSelection(textInterface);
+		ConfigureClusteringAlgoMatrixSimilarityDialog dialog = new ConfigureClusteringAlgoMatrixSimilarityDialog(shell);
 		// get the new values from the dialog
 		if (dialog.open() == Window.OK) {
 			return "-E " + dialog.getEpsilon() +
-				   " -M " + dialog.getMinCluster();
+					" -M " + dialog.getMinCluster();
+		}
+		return null;
+	}
+	
+	/**
+	 * @author Landi
+	 */
+	public static String dialogWhatAlgoTOFROMConfiguration(String textInterface, Shell shell) {
+		ConfigureClusteringAlgoTOFROMDialog.setTextSelection(textInterface);
+		ConfigureClusteringAlgoTOFROMDialog dialog = new ConfigureClusteringAlgoTOFROMDialog(shell);
+		// get the new values from the dialog
+		if (dialog.open() == Window.OK) {
+			return "GenerateUML:" + dialog.getUML() + ";"
+					+ "GenerateUMLCode:" + dialog.getUMLCode()  + ";"
+							+ "GenerateUMLStructure:" + dialog.getUMLStructure()  + ";"
+					; 
 		}
 		return null;
 	}
