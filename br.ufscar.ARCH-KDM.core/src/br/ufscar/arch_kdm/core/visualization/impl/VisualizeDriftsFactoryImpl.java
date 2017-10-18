@@ -21,8 +21,7 @@ public class VisualizeDriftsFactoryImpl implements VisualizeDriftsFactory {
 
 	@Override
 	public IVisualizeDriftsAlgo createVisualizeDriftsAlgoToFrom() {
-		// TODO Auto-generated method stub
-		return null;
+		return new VisualizeDriftsAlgoFromTo();
 	}
 
 	
