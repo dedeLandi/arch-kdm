@@ -4,11 +4,10 @@
  */
 package br.ufscar.arch_kdm.ui.visualization.groupingTypes;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import br.ufscar.arch_kdm.core.util.ArchKDM2UML;
-import br.ufscar.arch_kdm.core.util.GenericMethods;
+import javax.swing.JOptionPane;
+
 import br.ufscar.arch_kdm.core.visualization.IVisualizeDriftsAlgo;
 import br.ufscar.arch_kdm.core.visualization.VisualizeDriftsFactory;
 import br.ufscar.arch_kdm.core.visualization.groupingAlgorithms.IGroupingAlgorithmType;
@@ -23,42 +22,52 @@ import br.ufscar.arch_kdm.ui.wizards.ArchKDMWizard;
 public enum GroupingAlgorithmTypes implements IGroupingAlgorithmType{
 
 	GROUPING_BY_TO_FROM("Grouping TO-FROM"){
-		boolean structure = true; 
-		boolean code = true;
 		
 		@Override
 		public Object configAlgo() {
-			// TODO Criar uma dialog com 2 checkboxes.
-			// TODO Checkboxes labels: Code View e Structure View
-			// TODO structure = true se structure view estiver checada, senão false
-			// TODO code = true se code view estiver checada, senão false
-			return null;
+			String textInterface = "Select the configuration of the TO-FROM Algo:";
+			return InterfaceGenericMethods.dialogWhatAlgoTOFROMConfiguration(textInterface, null);
 		}
 
 		@Override
 		public Object configAlgoDefault() {
-			// TODO Auto-generated method stub
-			return null;
+			return "GenerateUML:" + true + ";"
+					+ "GenerateUMLCode:" + true  + ";"
+							+ "GenerateUMLStructure:" + true  + ";"
+					; 
 		}
 
 		@Override
 		public List<Drift> execAlgo(Object wizard, Object config) {
-			GenericMethods.splitAggregatedByRelatedRelationships(((ArchKDMWizard) wizard).getStructureDrifts().getStructureElement());
-			String KDMPath = ((ArchKDMWizard) wizard).getPathActualArchitecture().replace(".xmi", "-violations-ArchKDM2UML.kdm");
-			GenericMethods.serializeSegment("file:///"+KDMPath, ((ArchKDMWizard) wizard).getSegmentActualArchitecture());
+			String optionsAlgo = (String) config;
+			String KDMPath = ((ArchKDMWizard) wizard).getPathActualArchitecture().replace(".xmi", "-violations.xmi");
 			
-			ArchKDM2UML atl;
+			IVisualizeDriftsAlgo visualizeDrifts = VisualizeDriftsFactory.INSTANCE.createVisualizeDriftsAlgoToFrom();
+			visualizeDrifts.setModelViolatingPath(KDMPath);
+			visualizeDrifts.setAlgorithmOptions(optionsAlgo);
 			
-			if (code) {
-				atl = new ArchKDM2UML(KDMPath, KDMPath.replace(".kdm", "-codeView.uml"), false);
-				atl.run();
-			}			
-			if (structure) {
-				atl = new ArchKDM2UML(KDMPath, KDMPath.replace(".kdm", "-structureView.uml"), true);
-				atl.run();
-			}
+			List<Drift> drifts = visualizeDrifts.getDrifts();
+			System.out.println(drifts.size());
+			JOptionPane.showMessageDialog(null, "Algorith finish the run and generate the files");
+			return drifts;
 			
-			return new ArrayList<Drift>();
+//			GenericMethods.splitAggregatedByRelatedRelationships(((ArchKDMWizard) wizard).getStructureDrifts().getStructureElement());
+//			String KDMPath = ((ArchKDMWizard) wizard).getPathActualArchitecture().replace(".xmi", "-violations-ArchKDM2UML.kdm");
+//			System.out.println(((ArchKDMWizard) wizard).getPathActualArchitecture());
+//			GenericMethods.serializeSegment("file:///"+KDMPath, ((ArchKDMWizard) wizard).getSegmentActualArchitecture());
+//
+//			ArchKDM2UML atl = new ArchKDM2UML();
+//			atl.generateUML(KDMPath);
+//			
+//			if (code) {
+//				atl = new ArchKDM2UML(KDMPath, KDMPath.replace(".kdm", "-codeView.uml"), false);
+//				atl.run();
+//			}			
+//			if (structure) {
+//				atl = new ArchKDM2UML(KDMPath, KDMPath.replace(".kdm", "-structureView.uml"), true);
+//				atl.run();
+//			}
+			
 		}
 		
 	},
@@ -67,7 +76,7 @@ public enum GroupingAlgorithmTypes implements IGroupingAlgorithmType{
 		@Override
 		public Object configAlgo() {
 			String textInterface = "Select the configuration of the DBScan Algo:";
-			return InterfaceGenericMethods.dialogWhatAlgoConfiguration(textInterface, null);
+			return InterfaceGenericMethods.dialogWhatAlgoMatrixSimilarityConfiguration(textInterface, null);
 		}
 		
 		@Override
