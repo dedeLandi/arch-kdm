@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-public class ConfigureClusteringAlgoDialog extends Dialog{
+public class ConfigureClusteringAlgoMatrixSimilarityDialog extends Dialog{
 
 	private static String textSelection = "Select the configuration of the DBScan Algo:";
 
@@ -26,7 +26,7 @@ public class ConfigureClusteringAlgoDialog extends Dialog{
 
 	private String epsilon;
 
-	public ConfigureClusteringAlgoDialog(Shell parentShell) {
+	public ConfigureClusteringAlgoMatrixSimilarityDialog(Shell parentShell) {
 		super(parentShell);
 	}
 
@@ -103,6 +103,6 @@ public class ConfigureClusteringAlgoDialog extends Dialog{
 	}
 
 	public static void setTextSelection(String textSelection) {
-		ConfigureClusteringAlgoDialog.textSelection = textSelection;
+		ConfigureClusteringAlgoMatrixSimilarityDialog.textSelection = textSelection;
 	}
 }
