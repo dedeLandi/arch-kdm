@@ -57,7 +57,7 @@ public class Page02SelectFileWithDrift extends WizardPage {
 		lFilePlannedArchitecture.setText("File containing the \r\nplanned architecture");
 
 		tPathFilePlanned = new Text(container, SWT.BORDER);
-		tPathFilePlanned.setText("C:\\Java\\workspaceMestradoMars64\\arch-kdm\\br.ufscar.ARCH-KDM.ui\\src\\br\\ufscar\\arch_kdm\\ui\\tests\\archPlan.xmi");
+		tPathFilePlanned.setText("C:\\JavaLab\\workspace\\arch-kdm\\br.ufscar.ARCH-KDM.ui\\src\\br\\ufscar\\arch_kdm\\ui\\tests\\archPlan.xmi");
 		tPathFilePlanned.setEditable(false);
 		GridData gd_tPathFilePlanned = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
 		gd_tPathFilePlanned.widthHint = 100;
@@ -92,7 +92,7 @@ public class Page02SelectFileWithDrift extends WizardPage {
 		lFileActualArchitecture.setText("File containing the \r\nactual architecture");
 
 		tPathFileActual = new Text(container, SWT.BORDER);
-		tPathFileActual.setText("C:\\Java\\workspaceMestradoMars64\\arch-kdm\\br.ufscar.ARCH-KDM.ui\\src\\br\\ufscar\\arch_kdm\\ui\\tests\\SystemExampleMVC-SimplesComDesvios_kdm.xmi");
+		tPathFileActual.setText("C:\\JavaLab\\workspace\\arch-kdm\\br.ufscar.ARCH-KDM.ui\\src\\br\\ufscar\\arch_kdm\\ui\\tests\\SystemExampleMVC-SimplesComDesvios_kdm.xmi");
 		tPathFileActual.setEditable(false);
 		GridData gd_tPathFileActual = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
 		gd_tPathFileActual.widthHint = 100;
