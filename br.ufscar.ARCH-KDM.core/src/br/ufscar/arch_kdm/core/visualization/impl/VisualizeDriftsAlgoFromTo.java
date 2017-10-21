@@ -106,9 +106,9 @@ public class VisualizeDriftsAlgoFromTo implements IVisualizeDriftsAlgo {
 							}
 
 							if (!aggregated.getRelation().contains(relation_1))
-								aggregated.getRelation().add(relation_1);
+								aggregated.getRelation().add(0, relation_1);
 							if (!aggregated.getRelation().contains(relation_2))
-								aggregated.getRelation().add(relation_2);
+								aggregated.getRelation().add(0, relation_2);
 							aggregated.setDensity(aggregated.getRelation().size());
 						}
 					}
