@@ -23,11 +23,11 @@ import br.ufscar.arch_kdm.ui.wizards.ArchKDMWizard;
  */
 public enum GroupingAlgorithmTypes implements IGroupingAlgorithmType{
 
-	GROUPING_BY_TO_FROM("Grouping TO-FROM"){
+	GROUPING_BY_TO_FROM("ArchKDM2UML"){
 		
 		@Override
 		public Object configAlgo() {
-			String textInterface = "Select the configuration of the TO-FROM Algo:";
+			String textInterface = "Select the configuration of the ArchKDM2UML Algo:";
 			return InterfaceGenericMethods.dialogWhatAlgoTOFROMConfiguration(textInterface, null);
 		}
 

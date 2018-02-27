@@ -507,6 +507,10 @@ lazy rule createPseudoCode {
 	do {
 		for (relation in src.relation) {
 			relationFound <- false;
+			if (relation.oclIsKindOf(kdm!Extends) or relation.oclIsKindOf(kdm!Implements)) {
+				-- Skip inheritance and implementation
+				relationFound <- true;
+			}
 			if (relation.oclIsKindOf(kdm!HasType)) {
 				-- Skip association
 				if (relation.refImmediateComposite().refImmediateComposite().oclIsKindOf(kdm!ClassUnit)) {
@@ -626,13 +630,11 @@ lazy rule createPseudoCode {
 rule AggregatedRelationshipToDependency {
 	from
 		src: kdm!AggregatedRelationship (
-			src.getModelContainer().name = 'violations' and src.relation -> exists(e |
-					not e.oclIsKindOf(kdm!Extends) and not e.oclIsKindOf(kdm!Implements)
-					and not e.oclIsKindOf(kdm!Imports) and not (e.
-					oclIsKindOf(kdm!HasType) and e.refImmediateComposite().
-					refImmediateComposite().oclIsKindOf(kdm!ClassUnit)) and (e.
-					oclIsKindOf(kdm!HasType) or e.oclIsKindOf(kdm!Calls) or e.
-					oclIsKindOf(kdm!Creates)))
+			src.getModelContainer().name = 'violations' and src.relation -> exists(e | 
+					e.oclIsKindOf(kdm!Calls) or e.oclIsKindOf(kdm!Creates) or 
+					e.oclIsKindOf(kdm!UsesType) or e.oclIsKindOf(kdm!Imports) or 
+					e.oclIsKindOf(kdm!HasType) and not e.refImmediateComposite().
+					refImmediateComposite().oclIsKindOf(kdm!ClassUnit))
 		)
 	using {
 		srcClass: kdm!DataType = src.relation -> first().from.getDataTypeContainer();
