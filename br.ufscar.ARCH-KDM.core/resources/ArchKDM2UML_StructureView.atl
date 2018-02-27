@@ -184,12 +184,8 @@ helper context kdm!DataElement def: getDataElementType(): kdm!Datatype =
 --			thisModule->findExternalPackage()
 --		endif
 --	endif;
-helper context kdm!CodeItem def: getParent(): kdm!Package =
-	if (self.refImmediateComposite().isViolation()) then
-		self.refImmediateComposite()
-	else
-		self.findViolatedStructure()
-	endif;
+helper context kdm!CodeItem def: getParent(): kdm!Element =
+	self.refImmediateComposite();
 
 ---- Helper to find out whether a given entity (argument) is descendant of the context
 --- object (self)
@@ -275,7 +271,7 @@ helper context kdm!KDMEntity def: isEntityViolation(): Boolean =
 			)) and kdm!AbstractStructureElement.allInstances() -> exists(layer | layer.
 					implementation -> exists(impl | self.isDescendantOf(impl)));
 
-helper context kdm!KDMRelationship def: isRelationshipViolation(): kdm!Layer =
+helper context kdm!KDMRelationship def: isRelationshipViolation(): Boolean =
 	kdm!AbstractStructureElement.allInstances() -> exists(layer | layer.
 			getModelContainer().name = 'violations' and not (layer.inAggregated ->
 			isEmpty() and layer.outAggregated -> isEmpty()) and (
@@ -287,8 +283,10 @@ helper context kdm!KDMRelationship def: isRelationshipViolation(): kdm!Layer =
 					implementation -> exists(impl | self.isDescendantOf(impl)));
 
 --helper context kdm!KDMRelationship def: findRelationshipViolatedLayer(): kdm!Layer =
---	if kdm!AbstractStructureElement.allInstances() -> exists(structure | structure.implementation -> exists(impl | impl = self)) then
---		kdm!AbstractStructureElement.allInstances() -> select(structure | structure.implementation -> exists(impl | impl = self)) -> first()
+--	if kdm!AbstractStructureElement.allInstances() -> exists(structure |
+		-- structure.implementation -> exists(impl | impl = self)) then
+--		kdm!AbstractStructureElement.allInstances() -> select(structure |
+		-- structure.implementation -> exists(impl | impl = self)) -> first()
 --	else
 --		if self.refImmediateComposite().oclIsTypeOf(kdm!CodeModel) then
 --			OclUndefined
@@ -296,16 +294,16 @@ helper context kdm!KDMRelationship def: isRelationshipViolation(): kdm!Layer =
 --			self.refImmediateComposite().findViolatedStructure()
 --		endif
 --	endif;
-
 --helper context kdm!KDMRelationship def: findRelationshipViolatedLayer(): kdm!Layer =
 --	kdm!Layer.allInstances() -> select(layer | layer.getModelContainer().name =
 --			'violations' and layer.implementation -> exists(implementation | self.
 --			isDescendantOf(implementation))) -> first();
-
 --entrypoint rule test() {
 --	using {
---		segment: kdm!CodeModel = kdm!CodeModel.allInstances()->select(model | model.name = 'SystemExampleMVC-SimplesComDesvios')->first(); 
---		elements: kdm!KDMEntity = kdm!KDMEntity.allInstances()->select(entity | entity.isDescendantOf(segment));
+--		segment: kdm!CodeModel = kdm!CodeModel.allInstances()->select(model |
+		-- model.name = 'SystemExampleMVC-SimplesComDesvios')->first();
+--		elements: kdm!KDMEntity = kdm!KDMEntity.allInstances()->select(entity |
+		-- entity.isDescendantOf(segment));
 --		l1: kdm!Layer = OclUndefined;
 --		l2: kdm!Layer = OclUndefined;
 --	}
@@ -316,21 +314,28 @@ helper context kdm!KDMRelationship def: isRelationshipViolation(): kdm!Layer =
 --			if (not (l1.oclIsUndefined() or l2.oclIsUndefined())) {
 --				if (l1 = l2) {
 --					element.findViolatedStructure().debug('');
---					element.findViolatedStructure2().debug('');					
+--					element.findViolatedStructure2().debug('');
 --				}
 --			}
 --		}
 --	}
 --}
-
 helper context kdm!KDMEntity def: findViolatedStructure(): kdm!AbstractStructureElement =
-	if kdm!AbstractStructureElement.allInstances() -> exists(structure | structure.getModelContainer().name = 'violations' and structure.implementation -> exists(impl | impl = self)) then
-		kdm!AbstractStructureElement.allInstances() -> select(structure | structure.getModelContainer().name = 'violations' and structure.implementation -> exists(impl | impl = self)) -> first()
+	kdm!AbstractStructureElement.allInstances() -> select(structure | structure.
+			getModelContainer().name = 'violations' and structure.implementation ->
+			exists(impl | impl = self.findViolatedStructureImplementation())) -> first();
+
+helper context kdm!KDMEntity def: findViolatedStructureImplementation():
+		kdm!AbstractCodeElement =
+	if kdm!AbstractStructureElement.allInstances() -> exists(structure | structure.
+			getModelContainer().name = 'violations' and structure.implementation ->
+			exists(impl | impl = self)) then
+		self
 	else
-		if self.refImmediateComposite().oclIsTypeOf(kdm!StructureModel) then
+		if self.refImmediateComposite().oclIsTypeOf(kdm!CodeModel) then
 			OclUndefined
 		else
-			self.refImmediateComposite().findViolatedStructure()
+			self.refImmediateComposite().findViolatedStructureImplementation()
 		endif
 	endif;
 
@@ -338,7 +343,6 @@ helper context kdm!KDMEntity def: findViolatedStructure(): kdm!AbstractStructure
 --	kdm!Layer.allInstances() -> select(layer | layer.getModelContainer().name =
 --			'violations' and layer.implementation -> exists(implementation | self.
 --			isDescendantOf(implementation))) -> first();
-
 helper context kdm!Element def: getModelContainer(): kdm!CodeModel =
 	if (self.oclIsTypeOf(kdm!CodeModel) or self.oclIsTypeOf(kdm!StructureModel)) then
 		self
@@ -346,11 +350,12 @@ helper context kdm!Element def: getModelContainer(): kdm!CodeModel =
 		self.refImmediateComposite().getModelContainer()
 	endif;
 
-helper context kdm!Element def: getClassContainer(): kdm!ClassUnit =
-	if (self.oclIsTypeOf(kdm!ClassUnit)) then
+helper context kdm!Element def: getDataTypeContainer(): kdm!DataType =
+	if (self.oclIsTypeOf(kdm!ClassUnit) or self.oclIsTypeOf(kdm!EnumeratedType) or self.
+			oclIsTypeOf(kdm!InterfaceUnit)) then
 		self
 	else 
-		self.refImmediateComposite().getClassContainer()
+		self.refImmediateComposite().getDataTypeContainer()
 	endif;
 
 helper context kdm!Element def: isViolation(): Boolean =
@@ -403,7 +408,7 @@ rule SubsystemToPackage {
 		)
 	to
 		tgt: uml!Package (
-			name <- '<Subsystem>'+src.name,
+			name <- '<Subsystem>' + src.name,
 			packagedElement <- src.structureElement
 		)
 }
@@ -417,7 +422,21 @@ rule LayerToPackage {
 		)
 	to
 		tgt: uml!Package (
-			name <- '<Layer>'+src.name,
+			name <- '<Layer>' + src.name,
+			packagedElement <- src.structureElement
+		)
+}
+
+-- Layer transformation
+rule ComponentToPackage {
+	from
+		src: kdm!Component (
+			src.getModelContainer().name = 'violations' and not (src.inAggregated ->
+					isEmpty() and src.outAggregated -> isEmpty())
+		)
+	to
+		tgt: uml!Package (
+			name <- '<Component>' + src.name,
 			packagedElement <- src.structureElement
 		)
 }
@@ -431,11 +450,14 @@ rule ModuleToPackage {
 	to
 		tgt: uml!Package (
 			name <- src.name,
-			visibility <- src -> getVisibility()
+			visibility <- src -> getVisibility(),
+			packagedElement <- src.codeElement
 		)
 	do {
-		thisModule.resolveTemp(src -> findViolatedStructure(), 'tgt').packagedElement
-			<- tgt;
+		if (src = src -> findViolatedStructureImplementation()) {
+			thisModule.resolveTemp(src -> findViolatedStructure(), 'tgt').packagedElement
+				<- tgt;
+		}
 	}
 }
 
