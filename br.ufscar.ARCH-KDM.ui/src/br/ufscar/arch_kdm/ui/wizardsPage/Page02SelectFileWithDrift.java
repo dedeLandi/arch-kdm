@@ -57,7 +57,8 @@ public class Page02SelectFileWithDrift extends WizardPage {
 		lFilePlannedArchitecture.setText("File containing the \r\nplanned architecture");
 
 		tPathFilePlanned = new Text(container, SWT.BORDER);
-		tPathFilePlanned.setText("C:\\JavaLab\\workspace\\arch-kdm\\br.ufscar.ARCH-KDM.ui\\src\\br\\ufscar\\arch_kdm\\ui\\tests\\archPlan.xmi");
+//		tPathFilePlanned.setText("/Users/Bruno/Desenvolvimento/EclipseWorkspace/ModiscoTargetApp/rules.xmi");
+//		tPathFilePlanned.setText("C:\\JavaLab\\workspace\\arch-kdm\\br.ufscar.ARCH-KDM.ui\\src\\br\\ufscar\\arch_kdm\\ui\\tests\\archPlan.xmi");
 		tPathFilePlanned.setEditable(false);
 		GridData gd_tPathFilePlanned = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
 		gd_tPathFilePlanned.widthHint = 100;
@@ -78,6 +79,7 @@ public class Page02SelectFileWithDrift extends WizardPage {
 		
 		cbTypeActualArchitecture = new Combo(container, SWT.READ_ONLY);
 		cbTypeActualArchitecture.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+//		cbTypeActualArchitecture.select(1);
 		cbTypeActualArchitecture.addListener(SWT.Selection, new Listener() {
 
 			@Override
@@ -92,7 +94,8 @@ public class Page02SelectFileWithDrift extends WizardPage {
 		lFileActualArchitecture.setText("File containing the \r\nactual architecture");
 
 		tPathFileActual = new Text(container, SWT.BORDER);
-		tPathFileActual.setText("C:\\JavaLab\\workspace\\arch-kdm\\br.ufscar.ARCH-KDM.ui\\src\\br\\ufscar\\arch_kdm\\ui\\tests\\SystemExampleMVC-SimplesComDesvios_kdm.xmi");
+		//tPathFileActual.setText("/Users/Bruno/Desenvolvimento/EclipseWorkspace/ModiscoTargetApp/ModiscoTargetApp_kdm.xmi");
+		//tPathFileActual.setText("C:\\JavaLab\\workspace\\arch-kdm\\br.ufscar.ARCH-KDM.ui\\src\\br\\ufscar\\arch_kdm\\ui\\tests\\SystemExampleMVC-SimplesComDesvios_kdm.xmi");
 		tPathFileActual.setEditable(false);
 		GridData gd_tPathFileActual = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
 		gd_tPathFileActual.widthHint = 100;
@@ -108,6 +111,7 @@ public class Page02SelectFileWithDrift extends WizardPage {
 		bSearchActual.setText("Search");
 		
 		ckHasType = new Button(container, SWT.CHECK);
+		//ckHasType.setSelection(true);
 		ckHasType.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 3, 1));
 		ckHasType.setText("Complete Actual Architecture With HasType");
 
