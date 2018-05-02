@@ -461,7 +461,7 @@ rule ModuleToPackage {
 	}
 }
 
-helper def : dependencies : Map(kdm!AbstractStructureElement, kdm!AbstractStructureElement) = Map{};
+helper def : dependencies : Map(TupleType(fromEl: kdm!AbstractStructureElement, toEl: kdm!AbstractStructureElement), Boolean) = Map{};
 
 unique lazy rule createDependency{
    from
@@ -479,9 +479,10 @@ rule AggregatedRelationshipToDependency {
 			src.getModelContainer().name = 'violations' and src.relation -> notEmpty()
 		)
 	do {
-		if (thisModule.dependencies -> get(src.from).oclIsUndefined()) {
+		if (thisModule.dependencies -> get(Tuple{fromEl = src.from, toEl = src.to}).oclIsUndefined()) {
 			thisModule.createDependency(src);
 		}
-		thisModule.dependencies <- thisModule.dependencies -> including(src.from, src.to);
+		thisModule.dependencies <- thisModule.dependencies 
+			-> including(Tuple{fromEl = src.from, toEl = src.to}, true);
 	}
 }
