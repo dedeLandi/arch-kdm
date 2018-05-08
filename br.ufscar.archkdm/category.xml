@@ -3,5 +3,9 @@
    <feature url="features/br.ufscar.archkdm_1.0.0.qualifier.jar" id="br.ufscar.archkdm" version="1.0.0.qualifier">
       <category name="new_category_1"/>
    </feature>
-   <category-def name="new_category_1" label="New Category 1"/>
+   <category-def name="new_category_1" label="AdnvanSE Group">
+      <description>
+         The AdvanSE lab (Advanced Research Group on Software Engineering) is located at the Computer Science department of the Federal University of São Carlos (UFSCar; São Carlos - SP - Brazil). The group members (professors, undergraduate students, master and phd candidates) are engaged in software engineering related research, with emphasis on frameworks, aspect-oriented programming, modeling, legacy system modernization, architecture-driven modernization (ADM), structured metrics (SMM), refactorings, etc. AdvanSE Members has published a lot of scientific papers within events inside brazil and around the world.
+      </description>
+   </category-def>
 </site>
