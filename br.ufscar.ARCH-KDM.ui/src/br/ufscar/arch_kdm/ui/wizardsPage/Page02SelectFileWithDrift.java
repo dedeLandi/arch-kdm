@@ -125,7 +125,7 @@ public class Page02SelectFileWithDrift extends WizardPage {
 
 		FileDialog fd = new FileDialog(getShell(), SWT.OPEN);
 		fd.setText("Open");
-		fd.setFilterPath("C:/");
+		//fd.setFilterPath("C:/");
 		String[] filterExt = new String[]{"*.xmi"};
 		fd.setFilterExtensions(filterExt);
 		String selected = fd.open();
@@ -144,7 +144,7 @@ public class Page02SelectFileWithDrift extends WizardPage {
 
 		FileDialog fd = new FileDialog(getShell(), SWT.OPEN);
 		fd.setText("Open");
-		fd.setFilterPath("C:/");
+		//fd.setFilterPath("C:/");
 		String[] filterExt = new String[]{"*.xmi"};
 		fd.setFilterExtensions(filterExt);
 		String selected = fd.open();
