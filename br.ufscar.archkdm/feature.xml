@@ -3,19 +3,18 @@
       id="br.ufscar.archkdm"
       label="br.ufscar.archkdm"
       version="1.0.0.qualifier"
-      provider-name="br.ufscar"
-      plugin="br.ufscar">
+      provider-name="br.ufscar">
 
    <description url="http://www.example.com/description">
-      [Enter Feature Description here.]
+      Under Construction
    </description>
 
    <copyright url="http://www.example.com/copyright">
-      [Enter Copyright Description here.]
+      Under Construction
    </copyright>
 
    <license url="http://www.example.com/license">
-      [Enter License Description here.]
+      Under Construction
    </license>
 
    <plugin
@@ -27,6 +26,13 @@
 
    <plugin
          id="br.ufscar.ARCH-KDM.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="br.ufscar.KDM-MANAGER.core"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -48,13 +54,6 @@
 
    <plugin
          id="com.br.terra.dcl.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="br.ufscar.KDM-MANAGER.core"
          download-size="0"
          install-size="0"
          version="0.0.0"
