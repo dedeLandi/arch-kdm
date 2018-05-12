@@ -323,21 +323,12 @@ helper context kdm!KDMRelationship def: isRelationshipViolation(): Boolean =
 helper context kdm!KDMEntity def: findViolatedStructure(): kdm!AbstractStructureElement =
 	kdm!AbstractStructureElement.allInstances() -> select(structure | structure.
 			getModelContainer().name = 'violations' and structure.implementation ->
-			exists(impl | impl = self.findViolatedStructureImplementation())) -> first();
+			exists(impl | impl = self)) -> first();
 
-helper context kdm!KDMEntity def: findViolatedStructureImplementation():
-		kdm!AbstractCodeElement =
-	if kdm!AbstractStructureElement.allInstances() -> exists(structure | structure.
+helper context kdm!KDMEntity def: isStructureImplementation():
+		Boolean = kdm!AbstractStructureElement.allInstances() -> exists(structure | structure.
 			getModelContainer().name = 'violations' and structure.implementation ->
-			exists(impl | impl = self)) then
-		self
-	else
-		if self.refImmediateComposite().oclIsTypeOf(kdm!CodeModel) then
-			OclUndefined
-		else
-			self.refImmediateComposite().findViolatedStructureImplementation()
-		endif
-	endif;
+			exists(impl | impl = self));
 
 --helper context kdm!KDMEntity def: findViolatedStructure(): kdm!Layer =
 --	kdm!Layer.allInstances() -> select(layer | layer.getModelContainer().name =
@@ -418,13 +409,19 @@ rule LayerToPackage {
 	from
 		src: kdm!Layer (
 			src.getModelContainer().name = 'violations' and not (src.inAggregated ->
-					isEmpty() and src.outAggregated -> isEmpty())
+					isEmpty() and src.outAggregated -> isEmpty() and src.structureElement -> isEmpty())
 		)
 	to
 		tgt: uml!Package (
 			name <- '<Layer>' + src.name,
 			packagedElement <- src.structureElement
 		)
+--	do {
+--		if (src.refImmediateComposite().oclIsKindOf(kdm!Layer) or
+--			src.refImmediateComposite().oclIsKindOf(kdm!Component)) {
+--			thisModule.resolveTemp(src.refImmediateComposite().implementation -> first(), 'tgt').packagedElement <- tgt;
+--		}
+--	}
 }
 
 -- Layer transformation
@@ -432,7 +429,7 @@ rule ComponentToPackage {
 	from
 		src: kdm!Component (
 			src.getModelContainer().name = 'violations' and not (src.inAggregated ->
-					isEmpty() and src.outAggregated -> isEmpty())
+					isEmpty() and src.outAggregated -> isEmpty() and src.structureElement -> isEmpty())
 		)
 	to
 		tgt: uml!Package (
@@ -442,10 +439,10 @@ rule ComponentToPackage {
 }
 
 -- Package transformation
-rule ModuleToPackage {
+rule PackageToPackage {
 	from
 		src: kdm!Package (
-			src.isViolation()
+			src.isViolation() and src.codeElement -> exists(child | not child.isStructureImplementation())
 		)
 	to
 		tgt: uml!Package (
@@ -454,7 +451,7 @@ rule ModuleToPackage {
 			packagedElement <- src.codeElement
 		)
 	do {
-		if (src = src -> findViolatedStructureImplementation()) {
+		if (src -> isStructureImplementation()) {
 			thisModule.resolveTemp(src -> findViolatedStructure(), 'tgt').packagedElement
 				<- tgt;
 		}
