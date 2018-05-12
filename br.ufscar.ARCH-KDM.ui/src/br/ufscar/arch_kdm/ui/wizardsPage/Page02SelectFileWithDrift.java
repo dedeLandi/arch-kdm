@@ -96,6 +96,7 @@ public class Page02SelectFileWithDrift extends WizardPage {
 		tPathFileActual = new Text(container, SWT.BORDER);
 		//tPathFileActual.setText("/Users/Bruno/Desenvolvimento/EclipseWorkspace/ModiscoTargetApp/ModiscoTargetApp_kdm.xmi");
 		//tPathFileActual.setText("C:\\JavaLab\\workspace\\arch-kdm\\br.ufscar.ARCH-KDM.ui\\src\\br\\ufscar\\arch_kdm\\ui\\tests\\SystemExampleMVC-SimplesComDesvios_kdm.xmi");
+//		tPathFileActual.setText("C:\\JavaLab\\workspace\\arch-kdm\\br.ufscar.ARCH-KDM.ui\\src\\br\\ufscar\\arch_kdm\\ui\\tests\\SystemExampleMVC-SimplesComDesvios_kdm.xmi");
 		tPathFileActual.setEditable(false);
 		GridData gd_tPathFileActual = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
 		gd_tPathFileActual.widthHint = 100;

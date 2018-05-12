@@ -51,8 +51,8 @@ public class Page03MapArchitecture extends WizardPage {
 	 */
 	public Page03MapArchitecture() {
 		super("page03");
-		setTitle("Architectural Refactoring Wizard");
-		setDescription("Map the actual architecture with the planned architecture.");
+		setTitle("Mapping Architectural Elements in Code Elements");
+		setDescription("Mapping the code elements in the elements of hte Planned Architecture (PA)");
 	}
 
 	/**
@@ -68,7 +68,7 @@ public class Page03MapArchitecture extends WizardPage {
 		Label lArchitecturalElements = new Label(container, SWT.NONE);
 		lArchitecturalElements.setFont(SWTResourceManager.getFont("Segoe UI", 15, SWT.NORMAL));
 		lArchitecturalElements.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
-		lArchitecturalElements.setText("Architectural Elements");
+		lArchitecturalElements.setText("Architectural Elements of the PA");
 
 		Label lCodeElements = new Label(container, SWT.NONE);
 		lCodeElements.setFont(SWTResourceManager.getFont("Segoe UI", 15, SWT.NORMAL));
@@ -114,7 +114,7 @@ public class Page03MapArchitecture extends WizardPage {
 		Label lElementsMapped = new Label(container, SWT.NONE);
 		lElementsMapped.setFont(SWTResourceManager.getFont("Segoe UI", 15, SWT.NORMAL));
 		lElementsMapped.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 2, 1));
-		lElementsMapped.setText("Elements Alread Mapped");
+		lElementsMapped.setText("Mapped Elements");
 
 		treeElementsMapped = new Tree(container, SWT.BORDER);
 		GridData gd_treeElementsMapped = new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1);
