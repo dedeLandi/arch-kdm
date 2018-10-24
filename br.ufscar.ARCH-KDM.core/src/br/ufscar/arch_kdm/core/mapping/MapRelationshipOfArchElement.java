@@ -81,6 +81,8 @@ public class MapRelationshipOfArchElement {
 			allRelationshipOf = typeRelation.getReader().getAllRelationshipOf((InterfaceUnit)entityToAvaliate);
 		}else if(entityToAvaliate instanceof EnumeratedType){
 			allRelationshipOf = typeRelation.getReader().getAllRelationshipOf((EnumeratedType)entityToAvaliate);
+		}else if(entityToAvaliate instanceof MethodUnit){
+			allRelationshipOf = typeRelation.getReader().getAllRelationshipOf((MethodUnit)entityToAvaliate);
 		}
 		
 		return MapRelationshipOfArchElement.createMapByTo(allRelationshipOf, typeRelation, structureToSearch);

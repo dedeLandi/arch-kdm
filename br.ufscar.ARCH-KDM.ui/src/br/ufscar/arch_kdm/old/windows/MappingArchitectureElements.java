@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.gmt.modisco.omg.kdm.code.AbstractCodeElement;
+import org.eclipse.gmt.modisco.omg.kdm.code.CodeItem;
 import org.eclipse.gmt.modisco.omg.kdm.code.Package;
 import org.eclipse.gmt.modisco.omg.kdm.kdm.Segment;
 import org.eclipse.gmt.modisco.omg.kdm.structure.AbstractStructureElement;
@@ -192,7 +193,11 @@ public class MappingArchitectureElements {
 				nameCorrected2 = getClassName(classOrInterface);				
 				treeItem11 = new TreeItem(treeItem0, 0);
 				treeItem11.setImage(classImage);
-				treeItem11.setText("[" + nameCorrected2 + "] " + classOrInterface.getName() + ".java");				
+				treeItem11.setText("[" + nameCorrected2 + "] " + classOrInterface.getName() + ".java");	
+				
+				ArrayList<CodeItem> allMethods = readingKDMFile.getMethodsByClassOrInterface((CodeItem)classOrInterface);
+				for (CodeItem method: allMethods) {
+				}
 			}
 		}
 	}

@@ -22,6 +22,7 @@ import org.eclipse.gmt.modisco.omg.kdm.code.CodeItem;
 import org.eclipse.gmt.modisco.omg.kdm.code.CodeModel;
 import org.eclipse.gmt.modisco.omg.kdm.code.EnumeratedType;
 import org.eclipse.gmt.modisco.omg.kdm.code.InterfaceUnit;
+import org.eclipse.gmt.modisco.omg.kdm.code.MethodUnit;
 import org.eclipse.gmt.modisco.omg.kdm.code.Package;
 import org.eclipse.gmt.modisco.omg.kdm.core.AggregatedRelationship;
 import org.eclipse.gmt.modisco.omg.kdm.core.CoreFactory;
@@ -245,6 +246,8 @@ public class GenericMethods {
 			path = KDMRecoverCodeHierarchyJavaFactory.eINSTANCE.createRecoverCodeHierarchyComplete(withHashCode).getHierarchyOf((InterfaceUnit)elementToSearch);
 		}else if (elementToSearch instanceof EnumeratedType) {
 			path = KDMRecoverCodeHierarchyJavaFactory.eINSTANCE.createRecoverCodeHierarchyComplete(withHashCode).getHierarchyOf((EnumeratedType)elementToSearch);
+		}else if (elementToSearch instanceof MethodUnit) {
+			path = KDMRecoverCodeHierarchyJavaFactory.eINSTANCE.createRecoverCodeHierarchyComplete(withHashCode).getHierarchyOf((MethodUnit)elementToSearch);
 		}
 
 		return path;

@@ -4,7 +4,11 @@ import java.util.Map;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gmt.modisco.omg.kdm.code.AbstractCodeElement;
+import org.eclipse.gmt.modisco.omg.kdm.code.ClassUnit;
+import org.eclipse.gmt.modisco.omg.kdm.code.CodeItem;
 import org.eclipse.gmt.modisco.omg.kdm.code.CodeModel;
+import org.eclipse.gmt.modisco.omg.kdm.code.InterfaceUnit;
+import org.eclipse.gmt.modisco.omg.kdm.code.MethodUnit;
 import org.eclipse.gmt.modisco.omg.kdm.code.Package;
 import org.eclipse.gmt.modisco.omg.kdm.core.KDMEntity;
 import org.eclipse.gmt.modisco.omg.kdm.structure.AbstractStructureElement;
@@ -427,20 +431,26 @@ public class Page03MapArchitecture extends WizardPage {
 
 		}
 	}
+	
+	private TreeItem addChildNode(TreeItem treeItemParent, AbstractCodeElement childElement) {
+		TreeItem treeItemChild = new TreeItem(treeItemParent, 0);
+		treeItemChild.setImage(IconsType.getImageByElement(childElement));
+		treeItemChild.setText("[" + childElement.eClass().getName() + "] " + childElement.getName());
+		treeItemChild.setData(childElement);
+		
+		return treeItemChild;
+	}
 
-	private void fillActualArchitecture(TreeItem treeItemParent, Package parentElement) {
-
-		for (AbstractCodeElement childElement : parentElement.getCodeElement()) {
-			TreeItem treeItemChild = new TreeItem(treeItemParent, 0);
-			treeItemChild.setImage(IconsType.getImageByElement(childElement));
-			treeItemChild.setText("[" + childElement.eClass().getName() + "] " + childElement.getName());
-			treeItemChild.setData(childElement);
-
-			if(childElement instanceof Package){
-				this.fillActualArchitecture(treeItemChild, (Package) childElement);
-			}
-
-		}	
+	private void fillActualArchitecture(TreeItem treeItemParent, CodeItem parentElement) {		
+		if (parentElement instanceof ClassUnit)
+			for (AbstractCodeElement childElement : ((ClassUnit)parentElement).getCodeElement())
+				if (childElement instanceof MethodUnit)
+					addChildNode(treeItemParent, childElement);
+		
+		if (parentElement instanceof Package)
+			for (AbstractCodeElement childElement : ((Package)parentElement).getCodeElement()) 
+				if (childElement instanceof Package || childElement instanceof ClassUnit || childElement instanceof InterfaceUnit)
+					this.fillActualArchitecture(addChildNode(treeItemParent, childElement), (CodeItem) childElement);					
 	}
 
 	/**

@@ -187,7 +187,7 @@ public class ReadingKDMFile {
 		
 		
 		//EList<AbstractStructureElement> abstractStructureElementASIS = (EList<AbstractStructureElement>) structureModelASIS.getStructureElement();
-		//alteracao necessária para nao precisar acessar um novo arquivo
+		//alteracao necessï¿½ria para nao precisar acessar um novo arquivo
 		EList<AbstractStructureElement> abstractStructureElementASIS = (EList<AbstractStructureElement>) structureModelViolations.getStructureElement();
 		
 		EList<AbstractStructureElement> abstractStructureElementTOBE = structureModelTOBE.getStructureElement();
@@ -267,8 +267,8 @@ public class ReadingKDMFile {
 				}
 				
 				if (i == (relationsTOBE.size()-1) && checked == false) {
-					//cria a nova instância
-					System.err.println("Não encontrado");
+					//cria a nova instï¿½ncia
+					System.err.println("Nï¿½o encontrado");
 					
 					this.searchStructureElement(aggregatedRelationshipASIS, relationASIS);
 					
@@ -325,7 +325,7 @@ public class ReadingKDMFile {
 					break;
 				}
 				
-				//se chegar no último e não encontrar
+				//se chegar no ï¿½ltimo e nï¿½o encontrar
 				if (i == (aggregatedFROM.size()-1)) {
 					
 					AggregatedRelationship newRelationship = CoreFactory.eINSTANCE.createAggregatedRelationship();
@@ -787,7 +787,23 @@ public class ReadingKDMFile {
 		EList<AbstractCodeElement> allClassesAndInterfaces = auxPackage.getCodeElement();
 		return allClassesAndInterfaces;
 	}
+	
+	public ArrayList<CodeItem> getMethodsByClassOrInterface(CodeItem classOrInterface) {
+		ArrayList<CodeItem> result = new ArrayList<CodeItem>();
 
+		if (classOrInterface instanceof ClassUnit)
+			for (CodeItem element: ((ClassUnit) classOrInterface).getCodeElement())
+				if (element instanceof MethodUnit)
+					result.add(element);
+		
+		if (classOrInterface instanceof InterfaceUnit)
+			for (CodeItem element: ((InterfaceUnit) classOrInterface).getCodeElement())
+				if (element instanceof MethodUnit)
+					result.add(element);
+				
+		return result;
+	}
+	
 	
 	/** 
 	 * Esse metodo e responsavel por obter todas as classes da instancia do KDM
@@ -957,9 +973,9 @@ public class ReadingKDMFile {
 	}
 	
 
-	//Falta concluir o Fix neste método
+	//Falta concluir o Fix neste mï¿½todo
 	//Anteriormente ele estava pegando o To somente de interface unit
-	//Agora será adaptado para pegar de método também
+	//Agora serï¿½ adaptado para pegar de mï¿½todo tambï¿½m
 	
 	public HasValue getRelationShipBetweenAnnotation(HasValue hasValue) {
 		
@@ -1810,7 +1826,7 @@ public class ReadingKDMFile {
 		
 		affectedElements.add(itemToVerify);
 		
-		//verifica se alcançou um pacote
+		//verifica se alcanï¿½ou um pacote
 		if (itemToVerify instanceof Package) {
 			return affectedElements;
 		}
@@ -1858,7 +1874,7 @@ public class ReadingKDMFile {
 			for (KDMRelationship kdmRelationship : kdmRelationships) {				
 				boolean result = false;
 				//TODO
-				//função que suba na árvore até encontrar o codeItem
+				//funï¿½ï¿½o que suba na ï¿½rvore atï¿½ encontrar o codeItem
 				if (codeItem instanceof MethodUnit) {
 					result = verifyRelationshipMethod(codeItem, kdmRelationship, result);
 				} else if (codeItem instanceof ClassUnit) {
@@ -1877,7 +1893,7 @@ public class ReadingKDMFile {
 	}
 	
 	//verifica se um relationship pertence a um determinado codeitem
-	//não garente que o método seja o mesmo, depois devemos subir a árvore para verificar se o elemento encontrado é realmente o mesmo
+	//nï¿½o garente que o mï¿½todo seja o mesmo, depois devemos subir a ï¿½rvore para verificar se o elemento encontrado ï¿½ realmente o mesmo
 	public boolean verifyRelationshipClass (KDMEntity item, EObject elementToVerify, boolean result) {		
 		
 		if (elementToVerify.eContainer() instanceof ClassUnit) {

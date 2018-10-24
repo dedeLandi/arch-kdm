@@ -73,7 +73,7 @@ public class Page04ArchitecturalCompilanceChecking extends WizardPage {
 
 		btnInitiateProcessing = new Button(container, SWT.NONE);
 		btnInitiateProcessing.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
-		btnInitiateProcessing.setText("Initiate Processing");
+		btnInitiateProcessing.setText("Execute ACC");
 		btnInitiateProcessing.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent e) {
